@@ -25,8 +25,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -41,7 +39,6 @@ import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.material3.toPath
@@ -90,7 +87,9 @@ import dev.ririxi.bunnylock.R
 import dev.ririxi.bunnylock.data.Rat
 import dev.ririxi.bunnylock.modem.Text as ModemText
 import dev.ririxi.bunnylock.modem.string
-import dev.ririxi.bunnylock.ui.theme.GoogleSansFlex
+import dev.ririxi.bunnylock.ui.design.SxDialog
+import dev.ririxi.bunnylock.ui.design.SxSans
+import dev.ririxi.bunnylock.ui.design.ratStyle
 import dev.ririxi.bunnylock.ui.theme.LocalLockGreen
 
 /** Inherits the surrounding text style so it scales with the flexible app bar. */
@@ -106,7 +105,7 @@ fun Wordmark(
             withStyle(SpanStyle(color = green)) { append("lock") }
         },
         modifier = modifier,
-        style = style.copy(fontFamily = GoogleSansFlex, fontWeight = FontWeight.ExtraBold, letterSpacing = (-0.5).sp),
+        style = style.copy(fontFamily = SxSans, fontWeight = FontWeight.ExtraBold, letterSpacing = (-0.5).sp),
     )
 }
 
@@ -122,7 +121,8 @@ fun SectionHeader(
         text,
         modifier = modifier.semantics { heading() }.padding(start = 20.dp, top = 12.dp, bottom = 2.dp),
         style = MaterialTheme.typography.titleSmallEmphasized,
-        color = MaterialTheme.colorScheme.primary,
+        // Section headers are labels, not verdicts: secondary text, never signal green.
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
 }
 
@@ -225,24 +225,22 @@ fun ConfirmDialog(
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
 ) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        icon = { Icon(icon, contentDescription = null) },
-        title = { Text(title) },
-        text = { Text(message) },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    onDismiss()
-                    onConfirm()
-                },
-                shapes = ButtonDefaults.shapes(),
-                colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error),
-            ) { Text(confirmLabel) }
+    // One dialog pattern for the whole app (Fase 7): the old raw
+    // AlertDialog with a red text-button confirm is now SxDialog with
+    // its destructive confirm. Both callers are destructive (clear
+    // cell lock, reboot modem), so the filled error button is right.
+    SxDialog(
+        title = title,
+        text = message,
+        confirmLabel = confirmLabel,
+        onConfirm = {
+            onDismiss()
+            onConfirm()
         },
-        dismissButton = {
-            TextButton(onClick = onDismiss, shapes = ButtonDefaults.shapes()) { Text(stringResource(R.string.common_cancel)) }
-        },
+        onDismiss = onDismiss,
+        dismissLabel = stringResource(R.string.common_cancel),
+        icon = icon,
+        destructiveConfirm = true,
     )
 }
 
@@ -465,25 +463,26 @@ fun RatBadge(
     rat: Rat,
     size: Dp = 40.dp,
 ) {
-    val colors = MaterialTheme.colorScheme
-    val style =
+    // RAT is a category, not a signal verdict: muted token colours (SxColors.ratStyle).
+    val style = ratStyle(rat)
+    val shape =
         when (rat) {
-            Rat.NR -> RatBadgeStyle(MaterialShapes.Cookie9Sided, colors.primaryContainer, colors.onPrimaryContainer, "5G")
-            Rat.LTE -> RatBadgeStyle(MaterialShapes.Clover4Leaf, colors.tertiaryContainer, colors.onTertiaryContainer, "4G")
-            Rat.WCDMA -> RatBadgeStyle(MaterialShapes.Pentagon, colors.secondaryContainer, colors.onSecondaryContainer, "3G")
-            Rat.GSM -> RatBadgeStyle(MaterialShapes.Circle, colors.surfaceContainerHighest, colors.onSurfaceVariant, "2G")
+            Rat.NR -> MaterialShapes.Cookie9Sided
+            Rat.LTE -> MaterialShapes.Clover4Leaf
+            Rat.WCDMA -> MaterialShapes.Pentagon
+            Rat.GSM -> MaterialShapes.Circle
         }
-    Box(Modifier.size(size).clip(style.shape.toShape()).background(style.container), contentAlignment = Alignment.Center) {
-        Text(style.label, color = style.content, style = MaterialTheme.typography.labelLargeEmphasized)
+    val label =
+        when (rat) {
+            Rat.NR -> "5G"
+            Rat.LTE -> "4G"
+            Rat.WCDMA -> "3G"
+            Rat.GSM -> "2G"
+        }
+    Box(Modifier.size(size).clip(shape.toShape()).background(style.container), contentAlignment = Alignment.Center) {
+        Text(label, color = style.content, style = MaterialTheme.typography.labelLargeEmphasized)
     }
 }
-
-private class RatBadgeStyle(
-    val shape: RoundedPolygon,
-    val container: Color,
-    val content: Color,
-    val label: String,
-)
 
 /** Icons missing from material-icons-core. */
 object BunnyIcons {
@@ -720,6 +719,38 @@ object BunnyIcons {
             lineToRelative(1.41f, 1.41f)
             curveTo(17.33f, 16.15f, 18f, 14.65f, 18f, 13f)
             reflectiveCurveToRelative(-0.67f, -3.15f, -1.76f, -4.24f)
+            close()
+        }
+    }
+
+    /** Field camera (Fase 6): the Material Symbols "photo_camera" path, same pattern as Tower/Bands above. */
+    val Camera: ImageVector by lazy {
+        icon("Camera") {
+            moveTo(12f, 15.2f)
+            curveToRelative(1.77f, 0f, 3.2f, -1.43f, 3.2f, -3.2f)
+            reflectiveCurveToRelative(-1.43f, -3.2f, -3.2f, -3.2f)
+            reflectiveCurveToRelative(-3.2f, 1.43f, -3.2f, 3.2f)
+            reflectiveCurveToRelative(1.43f, 3.2f, 3.2f, 3.2f)
+            close()
+            moveTo(9f, 2f)
+            lineTo(7.17f, 4f)
+            horizontalLineTo(4f)
+            curveToRelative(-1.1f, 0f, -2f, 0.9f, -2f, 2f)
+            verticalLineToRelative(12f)
+            curveToRelative(0f, 1.1f, 0.9f, 2f, 2f, 2f)
+            horizontalLineToRelative(16f)
+            curveToRelative(1.1f, 0f, 2f, -0.9f, 2f, -2f)
+            verticalLineTo(6f)
+            curveToRelative(0f, -1.1f, -0.9f, -2f, -2f, -2f)
+            horizontalLineToRelative(-3.17f)
+            lineTo(15f, 2f)
+            horizontalLineTo(9f)
+            close()
+            moveTo(12f, 17f)
+            curveToRelative(-2.76f, 0f, -5f, -2.24f, -5f, -5f)
+            reflectiveCurveToRelative(2.24f, -5f, 5f, -5f)
+            reflectiveCurveToRelative(5f, 2.24f, 5f, 5f)
+            reflectiveCurveToRelative(-2.24f, 5f, -5f, 5f)
             close()
         }
     }

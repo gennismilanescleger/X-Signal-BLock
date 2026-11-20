@@ -1,0 +1,30 @@
+<resources>
+    <string name="explorar_serving">Celda servidora</string>
+    <string name="explorar_signal">Calidad de señal</string>
+    <string name="explorar_neighbors">Celdas vecinas</string>
+    <string name="explorar_reading">Estado de la lectura</string>
+    <string name="explorar_channel">Canal</string>
+    <string name="explorar_frequency">Frecuencia</string>
+    <string name="explorar_technology">Tecnología</string>
+    <string name="explorar_pci">PCI</string>
+    <string name="explorar_bandwidth">Ancho de banda</string>
+    <string name="explorar_plmn">PLMN</string>
+    <string name="explorar_operator">Operador</string>
+    <string name="explorar_eci">ECI</string>
+    <string name="explorar_nci">NCI</string>
+    <string name="explorar_tac">TAC</string>
+    <string name="explorar_band">Banda</string>
+    <string name="explorar_rssi">RSSI</string>
+    <string name="explorar_updated">Actualizado</string>
+    <string name="explorar_save">Guardar medición</string>
+    <string name="explorar_auto_on">Recogida automática activada</string>
+    <string name="explorar_auto_off">Recogida automática desactivada</string>
+    <string name="explorar_auto_on_hint">Guarda una medición cada 30 segundos o cuando cambia la celda, mientras la app esté abierta.</string>
+    <string name="explorar_auto_off_hint">Las mediciones solo se guardan cuando tocas Guardar medición.</string>
+    <string name="explorar_notice_no_permission">Hace falta permiso para leer las celdas. Concédelo para ver la celda servidora.</string>
+    <string name="explorar_notice_open_settings">Abrir ajustes</string>
+    <string name="explorar_notice_stale">La última lectura está vieja. Puede que el módem no esté respondiendo.</string>
+    <string name="explorar_no_neighbors">No se ven celdas vecinas — solo la celda servidora.</string>
+    <string name="explorar_notice_no_serving">No hay celda servidora. El teléfono no está conectado a ninguna celda ahora mismo.</string>
+    <string name="explorar_cell_lock">Cell lock</string>
+</resources>

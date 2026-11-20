@@ -1,0 +1,19 @@
+<resources>
+    <string name="common_lock">Bloquear</string>
+    <string name="common_unlock">Desbloquear</string>
+    <string name="common_unlock_all">Desbloquear todo</string>
+    <string name="common_unknown">Desconocido</string>
+    <string name="common_unknown_band">Banda desconocida</string>
+    <string name="common_copy_diagnostics">Copiar diagnóstico</string>
+    <string name="common_send">Enviar</string>
+    <string name="common_bands">Bandas</string>
+    <string name="common_cell">Celda</string>
+    <string name="common_network">Red</string>
+    <string name="common_modem">Módem</string>
+    <string name="common_device">Dispositivo</string>
+    <string name="common_platform">Plataforma</string>
+    <string name="common_baseband">Baseband</string>
+    <string name="common_cancel">Cancelar</string>
+    <string name="common_save">Guardar</string>
+    <string name="common_close">Cerrar</string>
+</resources>

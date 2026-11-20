@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -29,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -128,6 +130,24 @@ fun SettingsScreen(
         }
 
         item {
+            SectionHeader(stringResource(R.string.settings_measurements))
+            Segmented {
+                item {
+                    SwitchItem(
+                        it,
+                        stringResource(R.string.settings_auto_collect),
+                        stringResource(R.string.settings_auto_collect_hint),
+                        checked = state.autoCollect,
+                        onCheckedChange = vm::setAutoCollect,
+                    )
+                }
+                item {
+                    InfoItem(it, stringResource(R.string.settings_measurements_count), state.measurementCount.toString())
+                }
+            }
+        }
+
+        item {
             SectionHeader(stringResource(R.string.settings_appearance))
             Segmented {
                 item { shapes ->
@@ -191,9 +211,13 @@ fun SettingsScreen(
 
 private const val TAPS_FOR_FACT = 5
 
+private const val BUNNYLOCK_SOURCE_URL = "https://github.com/btsearch/bunnylock"
+private const val GPLV3_URL = "https://www.gnu.org/licenses/gpl-3.0.html"
+
 @Composable
 private fun About() {
     val context = LocalContext.current
+    val uriHandler = LocalUriHandler.current
     val version =
         remember {
             runCatching { context.packageManager.getPackageInfo(context.packageName, 0).versionName }.getOrNull().orEmpty()
@@ -221,6 +245,33 @@ private fun About() {
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
+            }
+        }
+        // Fase 6 (superprompt §11.12): the GPLv3 of the BunnyLock base
+        // is visible here, with attribution to the original project.
+        // This is the ONE About — there is no second About destination
+        // in Herramientas.
+        Text(
+            stringResource(R.string.settings_about_license),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Text(
+            stringResource(R.string.settings_about_signalx),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Text(
+            stringResource(R.string.settings_about_mapsforge),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            TextButton(onClick = { runCatching { uriHandler.openUri(BUNNYLOCK_SOURCE_URL) } }) {
+                Text(stringResource(R.string.settings_about_source))
+            }
+            TextButton(onClick = { runCatching { uriHandler.openUri(GPLV3_URL) } }) {
+                Text(stringResource(R.string.settings_about_license_text))
             }
         }
         val motion = MaterialTheme.motionScheme

@@ -1,0 +1,25 @@
+<resources>
+    <string name="shell_tab_bands">Bandas</string>
+    <string name="shell_tab_settings">Ajustes</string>
+    <string name="shell_tab_inicio">Inicio</string>
+    <string name="shell_tab_explorar">Explorar</string>
+    <string name="shell_tab_antenas">Antenas</string>
+    <string name="shell_tab_herramientas">Herramientas</string>
+    <string name="shell_refresh">Actualizar</string>
+    <string name="shell_stop_waiting">Dejar de esperar</string>
+    <string name="shell_denied_title">Hace falta root o Shizuku</string>
+    <string name="shell_try_again">Intentar de nuevo</string>
+    <string name="shell_subtitle_default">Bloqueo de bandas y celdas</string>
+    <string name="shell_subtitle_shizuku">%1$s (Shizuku)</string>
+    <string name="shell_sim_chip_description">SIM %1$d, %2$s. Cambiar SIM</string>
+    <string name="shell_sim_menu_item">SIM %1$d: %2$s</string>
+    <string name="shell_sim_selected">Seleccionada</string>
+    <string name="shell_update_title">Actualización disponible</string>
+    <string name="shell_update_message">La versión %1$s ya salió.</string>
+    <string name="shell_update_download">Descargar</string>
+    <string name="shell_update_skip">Saltar esta versión</string>
+    <string name="shell_update_later">Luego</string>
+    <string name="shell_lock_badge_ignored">Bloqueo ignorado</string>
+    <string name="shell_lock_badge_locked">Bloqueado</string>
+    <string name="shell_lock_badge_unlocked">Desbloqueado</string>
+</resources>

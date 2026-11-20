@@ -1,0 +1,27 @@
+<resources>
+    <string name="at_open_failed">No se pudo abrir %1$s (%2$s).</string>
+    <string name="at_not_accepted">El módem no aceptó %1$s. Respondió: %2$s</string>
+    <string name="at_read_failed">No se pudo leer de %1$s (%2$s).</string>
+    <string name="at_no_reply">El comando %1$s no recibió respuesta de %2$s.</string>
+    <string name="mtk_erat_no_mode">AT+ERAT no tiene modo para esa combinación.</string>
+    <string name="mtk_ca_kept">El módem mantuvo el ajuste anterior.</string>
+    <string name="mtk_epbse_unreadable">%1$s (%2$s respondió: %3$s).</string>
+    <string name="mtk_no_band_lock">El puerto AT %1$s no soporta bloqueo de bandas</string>
+    <string name="mtk_current_bands_unreadable">No se pudieron leer las bandas actuales de %1$s</string>
+    <string name="mtk_no_epbseh">Este módem no soporta AT+EPBSEH, así que puede que no tenga 5G.</string>
+    <string name="mtk_bands_left_off">El módem no encendió %1$s %2$s.</string>
+    <string name="mtk_bands_off_when_unlocked">En esta red, %1$s %2$s se quedaron apagadas incluso después del desbloqueo y se ocultarán en la pantalla de Bandas.</string>
+    <string name="oem_working_through">Trabajando por %1$s.</string>
+    <string name="oem_no_passthrough">Ningún passthrough de peticiones OEM respondió en este teléfono.</string>
+    <string name="oem_no_ril_passthrough">No hay passthrough RIL disponible en este teléfono.</string>
+    <string name="oem_no_raw_route">Este teléfono no tiene ninguna ruta de peticiones OEM que probar.</string>
+    <string name="oem_no_callback_reply">Sin respuesta de callback para %1$s.</string>
+    <string name="oem_timeout">El módem no respondió %1$s a tiempo.</string>
+    <string name="oem_service_refused">El servicio rechazó %1$s (%2$s).</string>
+    <string name="oem_probe_failed">%1$s falló: %2$s</string>
+    <string name="oem_probe_replied">%1$s respondió: %2$s</string>
+    <string name="oem_probe_silent">%1$s no respondió.</string>
+    <string name="cell_hint_mtk_at">Usa AT+EMMCHLCK, que mantiene un solo bloqueo a la vez. El PCI es opcional, y la radio se reinicia para aplicar el bloqueo.</string>
+    <string name="cell_hint_mtk_hal">Este módem no acepta AT+EMMCHLCK, así que la frecuencia (ARFCN) se bloquea por el HAL de radio. Eso no puede bloquear por PCI, y algunos módems lo ignoran.</string>
+    <string name="mtk_no_port_for_sim">Ningún puerto AT llega a la SIM %1$d. %2$s llega a la otra SIM, y este teléfono no tiene passthrough RIL.</string>
+</resources>

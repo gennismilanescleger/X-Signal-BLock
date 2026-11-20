@@ -1,0 +1,32 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="28dp"
+    android:height="34dp"
+    android:viewportWidth="280"
+    android:viewportHeight="340">
+    <!-- Pin de antena como la foto de Gennis (1.0.8): pin azul oscuro
+         #003D5C con circulo blanco adentro y la antena azul oscura con
+         sus arcos dentro del circulo. Vector propio, nada dibujado en
+         codigo. El cuerpo del pin es el trazo map-pin de Lucide;
+         la antena es el glifo cell_tower relleno. -->
+    <group
+        android:scaleX="17"
+        android:scaleY="17"
+        android:translateX="-64"
+        android:translateY="-34">
+        <path
+            android:fillColor="#003D5C"
+            android:pathData="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+    </group>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M 62,136 a 78,78 0 1,0 156,0 a 78,78 0 1,0 -156,0 Z" />
+    <group
+        android:scaleX="0.1625"
+        android:scaleY="0.1625"
+        android:translateX="62"
+        android:translateY="70.35">
+        <path
+            android:fillColor="#003D5C"
+            android:pathData="M 148 269 q 0 55 18.5 109.5 T 221 479 q 9 11 9 25.5 T 220 529 q -10 10 -24.5 9 T 172 526 q -46 -57 -69 -122 T 80 269 q 0 -70 23 -135 t 69 -122 q 9 -11 23.5 -12 t 24.5 9 q 10 10 10 24.5 t -9 25.5 q -36 46 -54.5 100.5 T 148 269 Z m 132 0 q 0 29 9 59 t 29 56 q 8 11 8 25 t -10 24 q -10 10 -24 9.5 T 269 431 q -28 -36 -42.5 -77.5 T 212 269 q 0 -43 14.5 -84.5 T 269 107 q 9 -11 23 -11.5 t 24 9.5 q 10 10 9.5 24 t -8.5 25 q -19 25 -28 54.5 t -9 60.5 Z m 107 400 l -18 54 q -4 11 -14 18.5 T 333 749 q -20 0 -31 -15.5 t -5 -34.5 l 118 -355 q -16 -14 -25.5 -33 t -9.5 -42 q 0 -42 29 -71 t 71 -29 q 42 0 71 29 t 29 71 q 0 23 -9.5 42 T 545 344 l 118 355 q 6 18 -4.5 34 T 628 749 q -12 0 -22.5 -7 T 591 723 l -17 -54 H 387 Z m 26 -80 h 134 l -67 -200 l -67 200 Z m 267 -320 q 0 -29 -9 -59 t -29 -56 q -8 -11 -8 -25 t 10 -24 q 10 -10 24.5 -9.5 T 691 107 q 27 36 41 77.5 t 16 84.5 q 0 43 -14.5 84.5 T 691 431 q -9 11 -23 11.5 t -24 -9.5 q -10 -10 -9.5 -24 t 8.5 -25 q 19 -25 28 -54.5 t 9 -60.5 Z m 132 0 q 0 -55 -18.5 -109.5 T 739 59 q -9 -11 -9 -25.5 t 10 -24.5 q 10 -10 24.5 -9 t 23.5 12 q 46 57 69 122 t 23 135 q 0 70 -21.5 135 T 789 526 q -10 11 -24 12.5 t -25 -9.5 q -10 -10 -10 -24.5 t 9 -25.5 q 36 -46 54.5 -100.5 T 812 269 Z" />
+    </group>
+</vector>

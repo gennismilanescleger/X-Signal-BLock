@@ -8,6 +8,12 @@ import dev.ririxi.bunnylock.modem.BandGroupState
 import dev.ririxi.bunnylock.modem.Group
 import dev.ririxi.bunnylock.modem.LockRat
 import dev.ririxi.bunnylock.modem.ModemState
+import dev.ririxi.bunnylock.signalx.AntennaFilter
+import dev.ririxi.bunnylock.signalx.AntennaRow
+import dev.ririxi.bunnylock.signalx.AntennaTarget
+import dev.ririxi.bunnylock.signalx.MeasurementSummary
+import dev.ririxi.bunnylock.signalx.SavedPoint
+import dev.ririxi.bunnylock.signalx.UserPosition
 
 val Group.favoritesKey: String
     get() =
@@ -62,6 +68,28 @@ data class UiState(
     val checkUpdates: Boolean = true,
     /** Band locks turn off every network without a lock of its own. */
     val exclusiveBandLock: Boolean = false,
+    /** SignalX auto-collection: save the serving cell every 30 s or when the cell changes, while the app is open. */
+    val autoCollect: Boolean = true,
+    /** The newest saved measurement, for Inicio's recent activity. Null when nothing has been saved yet. */
+    val lastMeasurement: MeasurementSummary? = null,
+    /** How many measurements have been saved (for Settings). */
+    val measurementCount: Int = 0,
+    /** SignalX antenna catalog (Fase 4): the 96 seed eNBs merged with manual positions and observed cells. */
+    val antennas: List<AntennaRow> = emptyList(),
+    /** The antenna picked as the orientation target (Fase 4 sets it; Fase 5's map centers on it). Null when none is picked. */
+    val antennaTarget: AntennaTarget? = null,
+    /** Antennas search text, kept as typed (SignalX 1.0.8 persistence). */
+    val antennasQuery: String = "",
+    /** Antennas filter, kept as chosen (SignalX 1.0.8 persistence). */
+    val antennasFilter: AntennaFilter = AntennaFilter.ALL,
+    /** The user's position (Fase 5): the single GPS fix, from LocationProvider. Null while there is no fix — never 0. */
+    val userPosition: UserPosition? = null,
+    /** Saved install points, for the map overlay (Fase 5). */
+    val mapPoints: List<SavedPoint> = emptyList(),
+    /** Positions of observed cells, for the map overlay (Fase 5). */
+    val observedCells: List<Pair<Double, Double>> = emptyList(),
+    /** eNB being placed by tapping the map (Fase 5). Null when not placing. */
+    val placingEnb: Int? = null,
     val toolOutput: String = "",
     val update: Release? = null,
     val favoriteBands: Map<String, Set<Int>> = emptyMap(),

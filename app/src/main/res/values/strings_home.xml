@@ -5,6 +5,10 @@
         <item quantity="one">Carrier</item>
         <item quantity="other">Carriers</item>
     </plurals>
+    <plurals name="home_visible_cells_header">
+        <item quantity="one">Visible cell</item>
+        <item quantity="other">Visible cells</item>
+    </plurals>
     <string name="home_chipset">Chipset</string>
     <string name="home_state_ignored">Ignored</string>
     <string name="home_state_locked">Locked</string>
@@ -37,4 +41,9 @@
     <string name="home_feature_off">%1$s off</string>
     <string name="home_unlock_all_title">Unlock everything?</string>
     <string name="home_unlock_all_message">Every band, cell and network lock comes off, and the phone picks a network on its own again.</string>
+    <string name="home_quick_actions">Quick actions</string>
+    <string name="home_explore">Explore signal</string>
+    <string name="home_antennas">Antennas</string>
+    <string name="home_last_measurement">Last saved measurement</string>
+    <string name="home_last_saved">Saved</string>
 </resources>

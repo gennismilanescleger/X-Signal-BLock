@@ -1,0 +1,49 @@
+<resources>
+    <string name="home_connection">Conexión</string>
+    <string name="home_no_serving_cell">Sin celda servidora</string>
+    <plurals name="home_carriers_header">
+        <item quantity="one">Operador</item>
+        <item quantity="other">Operadores</item>
+    </plurals>
+    <plurals name="home_visible_cells_header">
+        <item quantity="one">Celda visible</item>
+        <item quantity="other">Celdas visibles</item>
+    </plurals>
+    <string name="home_chipset">Chipset</string>
+    <string name="home_state_ignored">Ignorado</string>
+    <string name="home_state_locked">Bloqueado</string>
+    <string name="home_state_free">Libre</string>
+    <string name="home_relock">Volver a bloquear y elegir una celda de nuevo</string>
+    <string name="home_stray_band">El teléfono está en %1$s, fuera de las bandas bloqueadas.</string>
+    <string name="home_stray_channel">El teléfono está en %1$s, fuera de la frecuencia bloqueada.</string>
+    <string name="home_pinned_nothing">Nada fijado.</string>
+    <string name="home_pinned_bands">Las bandas están fijadas.</string>
+    <string name="home_pinned_cell">La celda está fijada.</string>
+    <string name="home_pinned_network">La red está fijada.</string>
+    <string name="home_pinned_bands_cell">Las bandas y la celda están fijadas.</string>
+    <string name="home_pinned_bands_network">Las bandas y la red están fijadas.</string>
+    <string name="home_pinned_cell_network">La celda y la red están fijadas.</string>
+    <string name="home_pinned_all">Las bandas, la celda y la red están fijadas.</string>
+    <string name="home_row_lte_cell">Celda LTE</string>
+    <string name="home_row_nr_cell">Celda NR</string>
+    <string name="home_row_legacy_cell">Celda 2G/3G</string>
+    <plurals name="home_carrier_count">
+        <item quantity="one">%d operador</item>
+        <item quantity="other">%d operadores</item>
+    </plurals>
+    <string name="home_tech_summary">%1$s, %2$s</string>
+    <string name="home_unknown_network">Red desconocida</string>
+    <string name="home_total_bandwidth">ancho de banda total</string>
+    <string name="home_tag_primary">Principal</string>
+    <string name="home_tag_secondary">Secundaria</string>
+    <string name="home_tag_serving">Servidora</string>
+    <string name="home_feature_on">%1$s activado</string>
+    <string name="home_feature_off">%1$s desactivado</string>
+    <string name="home_unlock_all_title">¿Desbloquear todo?</string>
+    <string name="home_unlock_all_message">Se quitan todos los bloqueos de bandas, celdas y redes, y el teléfono vuelve a elegir una red por su cuenta.</string>
+    <string name="home_quick_actions">Acciones rápidas</string>
+    <string name="home_explore">Explorar señal</string>
+    <string name="home_antennas">Antenas</string>
+    <string name="home_last_measurement">Última medición guardada</string>
+    <string name="home_last_saved">Guardada</string>
+</resources>

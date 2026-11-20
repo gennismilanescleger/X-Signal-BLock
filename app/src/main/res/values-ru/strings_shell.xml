@@ -1,8 +1,5 @@
 <resources>
-    <string name="shell_tab_home">Главная</string>
     <string name="shell_tab_bands">Диапазоны</string>
-    <string name="shell_tab_cell">Сота</string>
-    <string name="shell_tab_tools">Инструменты</string>
     <string name="shell_tab_settings">Настройки</string>
     <string name="shell_refresh">Обновить</string>
     <string name="shell_stop_waiting">Не ждать</string>

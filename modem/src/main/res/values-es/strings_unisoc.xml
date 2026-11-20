@@ -1,0 +1,5 @@
+<resources>
+    <string name="unisoc_reply_unreadable">El módem no devolvió sus bandas para %1$s. Respondió: %2$s</string>
+    <string name="unisoc_bands_unsettable">El bloqueo de bandas de este módem no puede incluir %1$s.</string>
+    <string name="unisoc_bands_kept">El módem tomó las bandas nuevas pero sigue usando las viejas tras reiniciar la radio.</string>
+</resources>

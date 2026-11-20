@@ -1,0 +1,32 @@
+<resources>
+    <string name="bands_network_mode">Modo de red</string>
+    <string name="bands_5g_mode">Modo 5G</string>
+    <string name="bands_nsa_on">NSA activado</string>
+    <string name="bands_nsa_off">NSA desactivado</string>
+    <string name="bands_samsung_menu">Abrir menú de bandas de Samsung</string>
+    <string name="bands_samsung_menu_hint">El bloqueo de bandas propio de Samsung, integrado en el teléfono.</string>
+    <string name="bands_summary">%1$d de %2$d seleccionadas</string>
+    <string name="bands_summary_pending">%1$d de %2$d seleccionadas, aún sin aplicar</string>
+    <string name="bands_summary_locked">%1$d de %2$d seleccionadas, bloqueadas</string>
+    <string name="bands_summary_locked_pending">%1$d de %2$d seleccionadas, bloqueadas, aún sin aplicar</string>
+    <string name="bands_summary_stray">%1$d de %2$d seleccionadas, bloqueadas pero el teléfono está en %3$s</string>
+    <string name="bands_summary_stray_pending">%1$d de %2$d seleccionadas, bloqueadas pero el teléfono está en %3$s, aún sin aplicar</string>
+    <string name="bands_summary_off">Apagado</string>
+    <string name="bands_summary_off_pending">%1$d de %2$d seleccionadas, apagado, aún sin aplicar</string>
+    <string name="bands_pick_favorites">Elige las bandas favoritas</string>
+    <string name="bands_pick_favorites_hint">Toca las bandas que quieres tener a la vista.</string>
+    <string name="bands_show_favorites">Mostrar solo favoritas</string>
+    <plurals name="bands_show_all">
+        <item quantity="one">Mostrar %d banda</item>
+        <item quantity="other">Mostrar las %d bandas</item>
+    </plurals>
+    <string name="bands_done">Listo</string>
+    <string name="bands_all">Todas</string>
+    <string name="bands_none">Ninguna</string>
+    <plurals name="bands_pending">
+        <item quantity="one">%d banda cambiada</item>
+        <item quantity="other">%d bandas cambiadas</item>
+    </plurals>
+    <string name="bands_discard">Descartar</string>
+    <string name="bands_lock_changes">Aplicar cambios de bandas</string>
+</resources>

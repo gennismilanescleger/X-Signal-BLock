@@ -1,0 +1,130 @@
+<resources>
+    <!-- Fase 6: Camera, Data, Diagnostics, About. Tabs in Spanish, body in English, as the rest of the UI. -->
+
+    <!-- Herramientas hub — new groups (superprompt §6.1) -->
+    <string name="hub_group_records">Records</string>
+    <string name="hub_camera_hint">Field camera — aim at the antenna base</string>
+    <string name="hub_data_hint">Saved measurements, points, photos and cells</string>
+    <string name="hub_diagnostics_hint">Full report: app, database, map, modem and last crash</string>
+    <string name="hub_tools_modem">Modem tools</string>
+
+    <!-- Camera (Herramientas > Camera, superprompt §6.3) -->
+    <string name="camera_title">Camera</string>
+    <string name="camera_hint">Point the cross at the base of the antenna, then take the photo.</string>
+    <string name="camera_capture">Take photo</string>
+    <string name="camera_starting">Starting camera…</string>
+    <string name="camera_no_camera">No camera found on this phone.</string>
+    <string name="camera_open_failed">Could not open the camera. It may be in use by another app. Try again.</string>
+    <string name="camera_session_failed">Could not start the camera preview. Try again.</string>
+    <string name="camera_capture_failed">The photo could not be taken. Try again.</string>
+    <string name="camera_save_failed">The photo could not be saved — check storage and try again.</string>
+    <string name="camera_no_permission">Camera permission is needed to take field photos.</string>
+    <string name="camera_permission_hint">The photo is saved on this phone only, with its GPS position and heading.</string>
+    <string name="camera_grant">Allow camera</string>
+    <string name="camera_open_settings">Open settings</string>
+    <string name="camera_try_again">Try again</string>
+    <string name="camera_saved">Photo saved — %1$s</string>
+    <string name="camera_point_saved">Point saved with photo — %1$s</string>
+    <string name="camera_saved_no_gps">No GPS fix — the photo was saved without a position.</string>
+    <string name="camera_position">Position</string>
+    <string name="camera_heading">Heading</string>
+    <string name="camera_no_gps">Waiting for GPS…</string>
+    <string name="camera_point_armed">This photo will be attached to the saved point.</string>
+    <string name="camera_done">Done</string>
+    <string name="camera_take_another">Take another</string>
+
+    <!-- Data (Herramientas > Data, superprompt §6.4) -->
+    <string name="data_title">Data</string>
+    <string name="data_export">Export</string>
+    <string name="data_import">Import</string>
+    <string name="data_export_hint">Saves everything as one JSON file. Exporting never deletes anything.</string>
+    <string name="data_import_hint">Merges a SignalX JSON file into what is already here — nothing is duplicated or reset.</string>
+    <string name="data_exported">Exported %1$d measurements, %2$d points, %3$d photos.</string>
+    <string name="data_export_failed">The export could not be written.</string>
+    <string name="data_imported">Imported: %1$d measurements, %2$d cells, %3$d points, %4$d positions, %5$d photos.</string>
+    <string name="data_imported_skipped">%1$d photos skipped — their files are not on this phone.</string>
+    <string name="data_import_failed">That file is not a valid SignalX export.</string>
+    <string name="data_search_hint">Search by eNB, band or date…</string>
+    <string name="data_measurements">Measurements</string>
+    <string name="data_points">Points</string>
+    <string name="data_photos">Photos</string>
+    <string name="data_cells">Observed cells</string>
+    <string name="data_empty_measurements">No measurements saved yet. Save one from Explorar or the compass.</string>
+    <string name="data_empty_points">No points saved yet. Save one from the compass.</string>
+    <string name="data_empty_photos">No photos yet. Take one from the camera.</string>
+    <string name="data_empty_cells">No cells observed yet. They appear when a measurement is saved.</string>
+    <string name="data_empty_search">Nothing matches that search.</string>
+    <string name="data_neighbors">Neighbors</string>
+    <string name="data_photo_attached">Photo attached</string>
+    <string name="data_photo_missing">Photo file missing</string>
+    <string name="data_delete">Delete</string>
+    <string name="data_delete_measurement_title">Delete this measurement?</string>
+    <string name="data_delete_measurement">Deletes this measurement and its %1$d neighbor cells. This cannot be undone.</string>
+    <string name="data_delete_point_title">Delete this point?</string>
+    <string name="data_delete_point">Deletes this point. Its photo, if it has one, is kept in Photos.</string>
+    <string name="data_delete_photo_title">Delete this photo?</string>
+    <string name="data_delete_photo">Deletes the photo and its file from the phone. This cannot be undone.</string>
+    <string name="data_delete_cell_title">Delete this observed cell?</string>
+    <string name="data_delete_cell">Removes this cell from the observed-cells registry. The antenna catalog is not touched.</string>
+    <string name="data_deleted">Deleted.</string>
+    <string name="data_delete_all">Delete all field data</string>
+    <string name="data_delete_all_title">Delete all field data?</string>
+    <string name="data_delete_all_message">Deletes %1$d measurements, %2$d points, %3$d photos, %4$d observed cells and %5$d manual antenna positions. Crash logs and maps are kept. This cannot be undone.</string>
+    <string name="data_delete_all_done">All field data deleted.</string>
+
+    <!-- Diagnostics (Herramientas > Diagnostics, superprompt §6.6) -->
+    <string name="diag_title">Diagnostics</string>
+    <string name="diag_share">Share</string>
+    <string name="diag_section_app">App</string>
+    <string name="diag_section_device">Device</string>
+    <string name="diag_section_database">Database</string>
+    <string name="diag_section_map">Map</string>
+    <string name="diag_section_settings">Settings</string>
+    <string name="diag_section_reading">Last reading</string>
+    <string name="diag_section_antennas">Antennas</string>
+    <string name="diag_section_modem">Modem and locks</string>
+    <string name="diag_section_crash">Last crash</string>
+    <string name="diag_version">Version</string>
+    <string name="diag_package">Package</string>
+    <string name="diag_cell">Cell</string>
+    <string name="diag_age">Age</string>
+    <string name="diag_phone">Phone</string>
+    <string name="diag_android">Android</string>
+    <string name="diag_observations">Measurements</string>
+    <string name="diag_neighbors">Neighbor cells</string>
+    <string name="diag_cells">Observed cells</string>
+    <string name="diag_points">Points</string>
+    <string name="diag_photos">Photos</string>
+    <string name="diag_positions">Manual positions</string>
+    <string name="diag_map_active">Active map</string>
+    <string name="diag_map_source">Source</string>
+    <string name="diag_map_size">Map size</string>
+    <string name="diag_map_none">No offline map loaded</string>
+    <string name="diag_auto_collect">Auto collection</string>
+    <string name="diag_backend">Backend</string>
+    <string name="diag_access">Access</string>
+    <string name="diag_target">Target</string>
+    <string name="diag_antennas_filter">Antennas filter</string>
+    <string name="diag_no_reading">No reading yet</string>
+    <string name="diag_antennas_map">On the map</string>
+    <string name="diag_antennas_list">In the list</string>
+    <string name="diag_locks_none">No locks active</string>
+    <string name="diag_crash_none">No crash recorded</string>
+    <string name="diag_crash_delete">Delete crash log</string>
+    <string name="diag_crash_delete_title">Delete the crash log?</string>
+    <string name="diag_crash_delete_message">Deletes %1$s. The next crash will be recorded again.</string>
+    <string name="diag_crash_deleted">Crash log deleted.</string>
+    <string name="diag_on">On</string>
+    <string name="diag_off">Off</string>
+
+    <!-- About (Settings > About extension, superprompt §11.12) -->
+    <string name="settings_about_license">Licensed under the GNU General Public License v3. Based on BunnyLock by @ririxi — source code and license below.</string>
+    <string name="settings_about_source">Source code (BunnyLock)</string>
+    <string name="settings_about_license_text">GPLv3 license text</string>
+    <string name="settings_about_signalx">Field tools — signal, antennas, maps, compass, camera and records — from SignalX, integrated here.</string>
+    <string name="settings_about_mapsforge">Maps: Mapsforge (LGPL).</string>
+
+    <!-- Compass: save point with photo (Fase 6 wiring of the Fase 5 point) -->
+    <string name="orient_install_save_point_photo">Save point with photo</string>
+    <string name="orient_point_no_gps_photo">No GPS fix yet — the photo point needs a position.</string>
+</resources>

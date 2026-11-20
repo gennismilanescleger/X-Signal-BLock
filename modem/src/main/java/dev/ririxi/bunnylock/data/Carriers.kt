@@ -27,6 +27,8 @@ data class Signal(
     val rsrp: Int?,
     val rsrq: Int?,
     val sinr: Int?,
+    /** LTE RSSI in dBm. Android reports no RSSI for NR. Null when not reported. */
+    val rssi: Int? = null,
 )
 
 object Carriers {
@@ -40,7 +42,7 @@ object Carriers {
         return strength.cellSignalStrengths.mapNotNull { signal ->
             when (signal) {
                 is CellSignalStrengthLte ->
-                    Signal(Rat.LTE, signal.rsrp.availableOrNull(), signal.rsrq.availableOrNull(), signal.rssnr.availableOrNull())
+                    Signal(Rat.LTE, signal.rsrp.availableOrNull(), signal.rsrq.availableOrNull(), signal.rssnr.availableOrNull(), signal.rssi.availableOrNull())
 
                 is CellSignalStrengthNr ->
                     Signal(Rat.NR, signal.ssRsrp.availableOrNull(), signal.ssRsrq.availableOrNull(), signal.ssSinr.availableOrNull())

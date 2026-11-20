@@ -141,6 +141,7 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.compose.material.icons.core)
     implementation(project(":modem"))
+    implementation(libs.mapsforge.map.android)
     implementation(libs.shizuku.api)
     implementation(libs.shizuku.provider)
     implementation(libs.hidden.api.bypass)

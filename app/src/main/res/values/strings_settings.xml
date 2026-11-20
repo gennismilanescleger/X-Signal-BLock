@@ -5,6 +5,10 @@
     <string name="settings_persist">Keep band locks after reboot</string>
     <string name="settings_persist_hint">When this is off, locks are cleared on reboot.</string>
     <string name="settings_appearance">Appearance</string>
+    <string name="settings_measurements">Measurements</string>
+    <string name="settings_auto_collect">Auto-collection</string>
+    <string name="settings_auto_collect_hint">Saves the serving cell and its neighbors every 30 seconds or when the cell changes, while the app is open.</string>
+    <string name="settings_measurements_count">Saved measurements</string>
     <string name="settings_bands">Band locks</string>
     <string name="settings_exclusive_lock">Turn off networks without a lock</string>
     <string name="settings_exclusive_lock_hint">Locking bands turns off every network without a band lock of its own. Unlocking turns them back on.</string>

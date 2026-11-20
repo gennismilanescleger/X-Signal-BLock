@@ -1,8 +1,5 @@
 <resources>
-    <string name="shell_tab_home">首页</string>
     <string name="shell_tab_bands">频段</string>
-    <string name="shell_tab_cell">锁小区</string>
-    <string name="shell_tab_tools">工具</string>
     <string name="shell_tab_settings">设置</string>
     <string name="shell_refresh">刷新</string>
     <string name="shell_stop_waiting">停止等待</string>

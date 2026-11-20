@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -29,17 +28,15 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Build
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.Refresh
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Settings
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
@@ -95,6 +92,7 @@ import dev.ririxi.bunnylock.data.Release
 import dev.ririxi.bunnylock.modem.Access
 import dev.ririxi.bunnylock.modem.RootState
 import dev.ririxi.bunnylock.modem.SimInfo
+import dev.ririxi.bunnylock.ui.design.SxDialog
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -106,23 +104,36 @@ private val RAIL_MIN_HEIGHT = 480.dp
 
 private val MAX_CONTENT_WIDTH = 720.dp
 
+// Fase 2: one navigation, four tabs (superprompt §3.1). The old Bands,
+// Cell lock, Tools and Settings tabs did not disappear: Cell lock is the
+// Antenas tab, and Bands, Tools and Settings live inside Herramientas
+// (ToolsHub). Nothing is orphaned.
 enum class Tab(
     @StringRes val label: Int,
     val icon: ImageVector,
 ) {
-    HOME(R.string.shell_tab_home, Icons.Rounded.Home),
-    BANDS(R.string.shell_tab_bands, BunnyIcons.Bands),
-    CELL(R.string.shell_tab_cell, BunnyIcons.Tower),
-    TOOLS(R.string.shell_tab_tools, Icons.Rounded.Build),
-    SETTINGS(R.string.shell_tab_settings, Icons.Rounded.Settings),
+    INICIO(R.string.shell_tab_inicio, Icons.Rounded.Home),
+    EXPLORAR(R.string.shell_tab_explorar, Icons.Rounded.Search),
+    ANTENAS(R.string.shell_tab_antenas, BunnyIcons.Tower),
+    HERRAMIENTAS(R.string.shell_tab_herramientas, Icons.Rounded.Build),
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun BunnyApp(vm: MainViewModel) {
     val state by vm.state.collectAsStateWithLifecycle()
-    var selectedTab by rememberSaveable { mutableStateOf(Tab.HOME) }
-    if (state.modem.root == RootState.Granted && (selectedTab == Tab.HOME || selectedTab == Tab.CELL)) LiveRefresh(vm)
+    var selectedTab by rememberSaveable { mutableStateOf(Tab.INICIO) }
+    // Sub-destination inside Herramientas, kept by name so it survives
+    // process death; null means the Herramientas hub itself.
+    var toolsDestinationName by rememberSaveable { mutableStateOf<String?>(null) }
+    val toolsDestination = ToolsDestination.entries.firstOrNull { it.name == toolsDestinationName }
+    // Section inside Antenas, kept by name so it survives process death;
+    // null means the catalog (Fase 4). The section survives tab switches
+    // like the Herramientas destination; explicit navigation (goToTab /
+    // goToCellLock) picks the section for its purpose.
+    var antennasSectionName by rememberSaveable { mutableStateOf<String?>(null) }
+    val antennasSection = AntennasSection.entries.firstOrNull { it.name == antennasSectionName } ?: AntennasSection.CATALOG
+    if (state.modem.root == RootState.Granted && (selectedTab == Tab.INICIO || selectedTab == Tab.EXPLORAR || selectedTab == Tab.ANTENAS)) LiveRefresh(vm)
     val snackbar = remember { SnackbarHostState() }
     val appBarStates = Tab.entries.associateWith { rememberTopAppBarState() }
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(appBarStates.getValue(selectedTab))
@@ -137,7 +148,36 @@ fun BunnyApp(vm: MainViewModel) {
     val showRail = showTabs && windowSize.width >= RAIL_MIN_WIDTH && windowSize.height >= RAIL_MIN_HEIGHT
     val showFloatingBar = showTabs && !showRail
     val floatingBarSpace = if (showFloatingBar) FloatingToolbarDefaults.ContainerSize + FloatingToolbarDefaults.ScreenOffset else 0.dp
-    val pendingToolbarSpace = if (selectedTab == Tab.BANDS && state.changedBandCount > 0) PENDING_TOOLBAR_SPACE else 0.dp
+    val pendingToolbarSpace = if (selectedTab == Tab.HERRAMIENTAS && toolsDestination == ToolsDestination.BANDS && state.changedBandCount > 0) PENDING_TOOLBAR_SPACE else 0.dp
+    // Tapping the Herramientas tab while already on it goes back to its
+    // hub; switching tabs keeps the sub-destination so coming back restores it.
+    val onSelectTab: (Tab) -> Unit = { tab ->
+        if (tab == selectedTab && tab == Tab.HERRAMIENTAS) toolsDestinationName = null else selectedTab = tab
+    }
+    // Fase 3: Inicio and Explorar link to the auto-collection setting
+    // (Herramientas > Settings) from their state line.
+    val goToSettings: () -> Unit = {
+        selectedTab = Tab.HERRAMIENTAS
+        toolsDestinationName = ToolsDestination.SETTINGS.name
+    }
+    // Navigation to a tab from another screen. Landing on Antenas from
+    // Inicio (or anywhere without a lock in hand) shows the catalog.
+    val goToTab: (Tab) -> Unit = { tab ->
+        if (tab == Tab.ANTENAS) antennasSectionName = AntennasSection.CATALOG.name
+        selectedTab = tab
+    }
+    // Explorar's "View in Antennas" fills the cell-lock form first, so it
+    // lands on the Cell lock section, not the catalog.
+    val goToCellLock: () -> Unit = {
+        antennasSectionName = AntennasSection.CELL_LOCK.name
+        selectedTab = Tab.ANTENAS
+    }
+    // Antenas' "View on map" / "Choose on map": the target (or the eNB
+    // being placed) is set first, then the map opens on it.
+    val goToOrientation: () -> Unit = {
+        selectedTab = Tab.HERRAMIENTAS
+        toolsDestinationName = ToolsDestination.ORIENTATION.name
+    }
     val safeInsets = WindowInsets.systemBars.union(WindowInsets.displayCutout)
     val contentSides = if (showRail) WindowInsetsSides.End else WindowInsetsSides.Horizontal
     val layoutDirection = LocalLayoutDirection.current
@@ -148,7 +188,7 @@ fun BunnyApp(vm: MainViewModel) {
         if (showRail) {
             TabRail(
                 selected = selectedTab,
-                onSelect = { selectedTab = it },
+                onSelect = onSelectTab,
                 windowInsets = safeInsets.only(WindowInsetsSides.Start + WindowInsetsSides.Vertical),
             )
         }
@@ -240,11 +280,35 @@ fun BunnyApp(vm: MainViewModel) {
                                 ) { tab ->
                                     tabStates.SaveableStateProvider(tab.name) {
                                         when (tab) {
-                                            Tab.HOME -> HomeScreen(state, vm, contentPadding) { selectedTab = it }
-                                            Tab.BANDS -> BandsScreen(state, vm, contentPadding)
-                                            Tab.CELL -> CellScreen(state, vm, contentPadding)
-                                            Tab.TOOLS -> ToolsScreen(state, vm, contentPadding)
-                                            Tab.SETTINGS -> SettingsScreen(state, vm, contentPadding)
+                                            Tab.INICIO ->
+                                                HomeScreen(
+                                                    state,
+                                                    vm,
+                                                    contentPadding,
+                                                    goTo = goToTab,
+                                                    goToBands = {
+                                                        selectedTab = Tab.HERRAMIENTAS
+                                                        toolsDestinationName = ToolsDestination.BANDS.name
+                                                    },
+                                                    goToSettings = goToSettings,
+                                                )
+
+                                            Tab.EXPLORAR -> ExplorarScreen(state, vm, contentPadding, goToCellLock = goToCellLock, goToSettings = goToSettings)
+                                            Tab.ANTENAS ->
+                                                AntennasScreen(
+                                                    state, vm, contentPadding, antennasSection,
+                                                    onSection = { antennasSectionName = it.name },
+                                                    onViewOnMap = { row ->
+                                                        vm.selectAntennaTarget(row)
+                                                        goToOrientation()
+                                                    },
+                                                    onPlaceOnMap = { enb ->
+                                                        vm.setPlacingEnb(enb)
+                                                        goToOrientation()
+                                                    },
+                                                )
+                                            Tab.HERRAMIENTAS ->
+                                                ToolsHub(state, vm, contentPadding, toolsDestination, { toolsDestinationName = it?.name }, goToAntennas = { goToTab(Tab.ANTENAS) })
                                         }
                                     }
                                 }
@@ -253,7 +317,7 @@ fun BunnyApp(vm: MainViewModel) {
                         if (showFloatingBar) {
                             FloatingTabBar(
                                 selected = selectedTab,
-                                onSelect = { selectedTab = it },
+                                onSelect = onSelectTab,
                                 modifier =
                                     Modifier.align(Alignment.BottomCenter).padding(
                                         start = innerPadding.calculateStartPadding(layoutDirection) + 16.dp,
@@ -291,30 +355,23 @@ private fun UpdateDialog(
     onDismiss: () -> Unit,
 ) {
     val uriHandler = LocalUriHandler.current
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.shell_update_title)) },
-        text = {
-            Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text(stringResource(R.string.shell_update_message, release.version))
-                if (release.notes.isNotEmpty()) Text(release.notes, style = MaterialTheme.typography.bodyMedium)
-            }
+    // One dialog pattern for the whole app (Fase 7): the three actions
+    // map onto SxDialog — Download is the confirm, Later the dismiss,
+    // "Skip this version" the secondary action.
+    SxDialog(
+        title = stringResource(R.string.shell_update_title),
+        confirmLabel = stringResource(R.string.shell_update_download),
+        onConfirm = {
+            runCatching { uriHandler.openUri(release.url) }
+            onDismiss()
         },
-        confirmButton = {
-            Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Button(
-                    onClick = {
-                        runCatching { uriHandler.openUri(release.url) }
-                        onDismiss()
-                    },
-                    shapes = ButtonDefaults.shapes(),
-                    modifier = Modifier.fillMaxWidth(),
-                ) { Text(stringResource(R.string.shell_update_download)) }
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    TextButton(onClick = onSkip, shapes = ButtonDefaults.shapes()) { Text(stringResource(R.string.shell_update_skip)) }
-                    TextButton(onClick = onDismiss, shapes = ButtonDefaults.shapes()) { Text(stringResource(R.string.shell_update_later)) }
-                }
-            }
+        onDismiss = onDismiss,
+        dismissLabel = stringResource(R.string.shell_update_later),
+        secondaryLabel = stringResource(R.string.shell_update_skip),
+        onSecondary = onSkip,
+        content = {
+            Text(stringResource(R.string.shell_update_message, release.version))
+            if (release.notes.isNotEmpty()) Text(release.notes, style = MaterialTheme.typography.bodyMedium)
         },
     )
 }

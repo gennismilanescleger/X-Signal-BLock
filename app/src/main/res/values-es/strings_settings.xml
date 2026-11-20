@@ -1,0 +1,53 @@
+<resources>
+    <string name="settings_backend">Backend</string>
+    <string name="settings_backend_needs_root">Necesita root</string>
+    <string name="settings_backend_detected">Detectado para este dispositivo</string>
+    <string name="settings_persist">Mantener los bloqueos de banda tras reiniciar</string>
+    <string name="settings_persist_hint">Si esto está apagado, los bloqueos se quitan al reiniciar.</string>
+    <string name="settings_appearance">Apariencia</string>
+    <string name="settings_measurements">Mediciones</string>
+    <string name="settings_auto_collect">Recogida automática</string>
+    <string name="settings_auto_collect_hint">Guarda la celda servidora y sus vecinas cada 30 segundos o cuando cambia la celda, mientras la app esté abierta.</string>
+    <string name="settings_measurements_count">Mediciones guardadas</string>
+    <string name="settings_bands">Bloqueos de banda</string>
+    <string name="settings_exclusive_lock">Apagar las redes sin bloqueo</string>
+    <string name="settings_exclusive_lock_hint">Bloquear bandas apaga cada red que no tenga su propio bloqueo de banda. Al desbloquear, vuelven a encenderse.</string>
+    <string name="settings_forget_needs_channels">Volver a bloqueos solo de bandas</string>
+    <string name="settings_forget_needs_channels_hint">Los bloqueos de banda en este teléfono incluyen las frecuencias visibles, porque un bloqueo solo de bandas no funcionó aquí antes. Toca para probar primero solo las bandas en el próximo bloqueo.</string>
+    <string name="settings_forget_kept_off_bands">Mostrar las bandas que el módem mantiene apagadas</string>
+    <string name="settings_forget_kept_off_bands_hint">Ocultas en esta red. Toca para mostrarlas de nuevo.</string>
+    <string name="settings_dynamic_color">Color dinámico</string>
+    <string name="settings_dynamic_color_hint">Usa los colores de tu fondo de pantalla. Apagado usa los colores azules por defecto.</string>
+    <string name="settings_theme">Tema</string>
+    <string name="settings_theme_system">Sistema</string>
+    <string name="settings_theme_light">Claro</string>
+    <string name="settings_theme_dark">Oscuro</string>
+    <string name="settings_pure_black">Negro OLED</string>
+    <string name="settings_pure_black_hint">Usa fondos negros puros mientras la app esté oscura.</string>
+    <string name="settings_language">Idioma</string>
+    <string name="settings_language_system">Por defecto del sistema</string>
+    <string name="settings_language_system_hint">Sigue a tu teléfono. Ahora mismo es %1$s.</string>
+    <string name="settings_language_helper_english">Algunos mensajes del ayudante de root pueden seguir saliendo en inglés.</string>
+    <string name="settings_language_name">Español</string>
+    <string name="settings_language_suggested">Sugerido</string>
+    <string name="settings_language_all">Todos los idiomas</string>
+    <string name="settings_updates">Actualizaciones</string>
+    <string name="settings_check_updates">Buscar actualizaciones</string>
+    <string name="settings_check_updates_hint">Busca una versión nueva en GitHub cuando arranca la app.</string>
+    <string name="settings_about">Acerca de</string>
+    <string name="settings_author">por @ririxi (desarrollador de BTSearch.pl)</string>
+    <string name="settings_version">Versión %1$s</string>
+    <string name="settings_bunny_fact">Dato de conejos: %1$s</string>
+    <string-array name="bunny_facts">
+        <item>Los dientes de un conejo nunca dejan de crecer, así que tienen que roer sin parar para desgastarlos.</item>
+        <item>Un conejo contento hace un «binky»: un salto con un giro en el aire.</item>
+        <item>Los conejos ven casi todo a su alrededor, salvo un pequeño punto ciego justo delante de la nariz.</item>
+        <item>Los conejos no pueden vomitar, así que comer algo malo es aún más peligroso para ellos.</item>
+        <item>Un conejo contento «ronronea» rechinando los dientes suavemente.</item>
+        <item>A los conejos bebés se les llama gazapos.</item>
+        <item>Los conejos están más activos al amanecer y al atardecer.</item>
+        <item>Esas orejas grandes también funcionan como radiadores y ayudan al conejo a refrescarse.</item>
+        <item>A un grupo de conejos a veces se le llama «fluffle».</item>
+        <item>Un conejo que golpea el suelo con la pata está avisando a los demás de que algo no anda bien.</item>
+    </string-array>
+</resources>

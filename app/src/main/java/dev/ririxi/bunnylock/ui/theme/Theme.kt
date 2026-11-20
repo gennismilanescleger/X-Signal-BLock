@@ -8,141 +8,46 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.MotionScheme
-import androidx.compose.material3.Typography
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontVariation
-import androidx.compose.ui.text.font.FontWeight
-import dev.ririxi.bunnylock.R
+import dev.ririxi.bunnylock.ui.design.SxColors
+import dev.ririxi.bunnylock.ui.design.SxTypography
 
-private val LightColors =
-    lightColorScheme(
-        primary = Color(0xFF415F91),
-        onPrimary = Color(0xFFFFFFFF),
-        primaryContainer = Color(0xFFD6E3FF),
-        onPrimaryContainer = Color(0xFF001B3E),
-        secondary = Color(0xFF565F71),
-        onSecondary = Color(0xFFFFFFFF),
-        secondaryContainer = Color(0xFFDAE2F9),
-        onSecondaryContainer = Color(0xFF131C2B),
-        tertiary = Color(0xFF705575),
-        onTertiary = Color(0xFFFFFFFF),
-        tertiaryContainer = Color(0xFFFAD8FD),
-        onTertiaryContainer = Color(0xFF28132E),
-        error = Color(0xFFBA1A1A),
-        onError = Color(0xFFFFFFFF),
-        errorContainer = Color(0xFFFFDAD6),
-        onErrorContainer = Color(0xFF410002),
-        background = Color(0xFFF9F9FF),
-        onBackground = Color(0xFF191C20),
-        surface = Color(0xFFF9F9FF),
-        onSurface = Color(0xFF191C20),
-        surfaceVariant = Color(0xFFE0E2EC),
-        onSurfaceVariant = Color(0xFF44474E),
-        outline = Color(0xFF74777F),
-        outlineVariant = Color(0xFFC4C6D0),
-        inverseSurface = Color(0xFF2E3036),
-        inverseOnSurface = Color(0xFFF0F0F7),
-        inversePrimary = Color(0xFFAAC7FF),
-        surfaceContainerLowest = Color(0xFFFFFFFF),
-        surfaceContainerLow = Color(0xFFF3F3FA),
-        surfaceContainer = Color(0xFFEDEDF4),
-        surfaceContainerHigh = Color(0xFFE7E8EE),
-        surfaceContainerHighest = Color(0xFFE2E2E9),
-    )
-
-private val DarkColors =
-    darkColorScheme(
-        primary = Color(0xFFAAC7FF),
-        onPrimary = Color(0xFF0A305F),
-        primaryContainer = Color(0xFF284777),
-        onPrimaryContainer = Color(0xFFD6E3FF),
-        secondary = Color(0xFFBEC6DC),
-        onSecondary = Color(0xFF283141),
-        secondaryContainer = Color(0xFF3E4759),
-        onSecondaryContainer = Color(0xFFDAE2F9),
-        tertiary = Color(0xFFDDBCE0),
-        onTertiary = Color(0xFF3F2844),
-        tertiaryContainer = Color(0xFF573E5C),
-        onTertiaryContainer = Color(0xFFFAD8FD),
-        error = Color(0xFFFFB4AB),
-        onError = Color(0xFF690005),
-        errorContainer = Color(0xFF93000A),
-        onErrorContainer = Color(0xFFFFDAD6),
-        background = Color(0xFF111318),
-        onBackground = Color(0xFFE2E2E9),
-        surface = Color(0xFF111318),
-        onSurface = Color(0xFFE2E2E9),
-        surfaceVariant = Color(0xFF44474E),
-        onSurfaceVariant = Color(0xFFC4C6D0),
-        outline = Color(0xFF8E9099),
-        outlineVariant = Color(0xFF44474E),
-        inverseSurface = Color(0xFFE2E2E9),
-        inverseOnSurface = Color(0xFF2E3036),
-        inversePrimary = Color(0xFF415F91),
-        surfaceContainerLowest = Color(0xFF0C0E13),
-        surfaceContainerLow = Color(0xFF191C20),
-        surfaceContainer = Color(0xFF1D2024),
-        surfaceContainerHigh = Color(0xFF282A2F),
-        surfaceContainerHighest = Color(0xFF33353A),
-    )
-
-private val LockGreenOnLight = Color(0xFF1FA34A)
-private val LockGreenOnDark = Color(0xFF5BE584)
-
-val LocalLockGreen = staticCompositionLocalOf { LockGreenOnLight }
-
-private val SignalScaleOnLight = listOf(LockGreenOnLight, Color(0xFF6E8E00), Color(0xFFB86E00), Color(0xFFCC3B2C))
-private val SignalScaleOnDark = listOf(LockGreenOnDark, Color(0xFFC3E35A), Color(0xFFFFB95C), Color(0xFFFF8A7E))
-
-val LocalSignalScale = staticCompositionLocalOf { SignalScaleOnLight }
+/**
+ * SignalX theme — Fase 1. The colour schemes and typography live in
+ * ui/design (SxColors / SxTypography); this file only wires them into
+ * Material 3 expressive.
+ *
+ * Dynamic colour is a BunnyLock function and stays (superprompt §11.3: the
+ * function stays, the design adapts). When it is ON, the Material You
+ * scheme (wallpaper colours) may only tint the NEUTRAL slots — background,
+ * surfaces, surface containers, outlines, inverse surfaces and the
+ * on-surface text colours that go with them. The SEMANTIC slots are
+ * re-pinned to the fixed SignalX tokens afterwards (see
+ * withFixedSemantics): green #4ADE80 = signal, cyan #38BDF8 = info,
+ * steel = categorical third colour, red #F87171 = error. So the wallpaper
+ * can never repaint "green = signal" into another colour. When it is OFF,
+ * the canonical SxColors dark/light scheme applies exactly as-is.
+ */
 
 val dynamicColorAvailable: Boolean get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
-internal val GoogleSansFlex =
-    FontFamily(
-        listOf(FontWeight.Normal, FontWeight.Medium, FontWeight.Bold, FontWeight.ExtraBold).map { weight ->
-            Font(R.font.google_sans_flex_rounded, weight, variationSettings = FontVariation.Settings(FontVariation.weight(weight.weight)))
-        },
-    )
+// Green for the lock state and the wordmark. Darker on light surfaces so it stays readable.
+val LocalLockGreen = staticCompositionLocalOf { SxColors.SignalOnLight }
 
-private fun TextStyle.withGoogleSansFlex() = copy(fontFamily = GoogleSansFlex)
-
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
-private val BunnyTypography =
-    Typography().run {
-        copy(
-            displayLarge = displayLarge.withGoogleSansFlex(),
-            displayMedium = displayMedium.withGoogleSansFlex(),
-            displaySmall = displaySmall.withGoogleSansFlex(),
-            headlineLarge = headlineLarge.withGoogleSansFlex(),
-            headlineMedium = headlineMedium.withGoogleSansFlex(),
-            headlineSmall = headlineSmall.withGoogleSansFlex(),
-            titleLarge = titleLarge.withGoogleSansFlex(),
-            titleMedium = titleMedium.withGoogleSansFlex(),
-            titleSmall = titleSmall.withGoogleSansFlex(),
-            displayLargeEmphasized = displayLargeEmphasized.withGoogleSansFlex(),
-            displayMediumEmphasized = displayMediumEmphasized.withGoogleSansFlex(),
-            displaySmallEmphasized = displaySmallEmphasized.withGoogleSansFlex(),
-            headlineLargeEmphasized = headlineLargeEmphasized.withGoogleSansFlex(),
-            headlineMediumEmphasized = headlineMediumEmphasized.withGoogleSansFlex(),
-            headlineSmallEmphasized = headlineSmallEmphasized.withGoogleSansFlex(),
-            titleLargeEmphasized = titleLargeEmphasized.withGoogleSansFlex(),
-            titleMediumEmphasized = titleMediumEmphasized.withGoogleSansFlex(),
-            titleSmallEmphasized = titleSmallEmphasized.withGoogleSansFlex(),
-        )
+// Signal scale, best to worst: green, lime, amber, red. Must stay
+// steps.size + 1 long for SxSignalThresholds (see SxColors.signalColorFor).
+val LocalSignalScale =
+    staticCompositionLocalOf {
+        listOf(SxColors.SignalOnLight, Color(0xFF6E8E00), Color(0xFFB86E00), Color(0xFFCC3B2C))
     }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun BunnyTheme(
     dynamicColor: Boolean = true,
@@ -151,26 +56,66 @@ fun BunnyTheme(
     content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current
+    val canonicalScheme = if (darkTheme) SxColors.DarkScheme else SxColors.LightScheme
+    // Dynamic colour ON: wallpaper palette for the neutrals only, then the
+    // semantic slots are pinned back to the fixed SignalX tokens.
+    // Dynamic colour OFF: the canonical scheme exactly as it is.
     val baseScheme =
         when {
-            dynamicColor && dynamicColorAvailable && darkTheme -> dynamicDarkColorScheme(context)
-            dynamicColor && dynamicColorAvailable -> dynamicLightColorScheme(context)
-            darkTheme -> DarkColors
-            else -> LightColors
+            dynamicColor && dynamicColorAvailable && darkTheme ->
+                dynamicDarkColorScheme(context).withFixedSemantics(canonicalScheme)
+            dynamicColor && dynamicColorAvailable ->
+                dynamicLightColorScheme(context).withFixedSemantics(canonicalScheme)
+            else -> canonicalScheme
         }
     val scheme = if (darkTheme && pureBlack) baseScheme.withPureBlack() else baseScheme
     CompositionLocalProvider(
-        LocalLockGreen provides if (darkTheme) LockGreenOnDark else LockGreenOnLight,
-        LocalSignalScale provides if (darkTheme) SignalScaleOnDark else SignalScaleOnLight,
+        LocalLockGreen provides if (darkTheme) SxColors.Signal else SxColors.SignalOnLight,
+        LocalSignalScale provides
+            if (darkTheme) {
+                listOf(SxColors.Signal, Color(0xFFC3E35A), SxColors.Warning, SxColors.Error)
+            } else {
+                listOf(SxColors.SignalOnLight, Color(0xFF6E8E00), Color(0xFFB86E00), Color(0xFFCC3B2C))
+            },
     ) {
         MaterialExpressiveTheme(
             colorScheme = scheme,
             motionScheme = MotionScheme.expressive(),
-            typography = BunnyTypography,
+            typography = SxTypography,
             content = content,
         )
     }
 }
+
+// Dynamic colour adaptation (superprompt §11.3): the wallpaper palette may
+// tint neutral surfaces, but the semantic slots stay FIXED to the SignalX
+// tokens, so green always means signal, cyan always means info, steel stays
+// the categorical third colour and red stays error. LocalLockGreen and
+// LocalSignalScale are fixed tokens too and never come from this scheme.
+// Slots NOT listed here stay dynamic: background, surface and its
+// containers, surfaceVariant, outline, inverse surfaces, and the on-surface
+// text colours (they are tuned to the dynamic background, so keeping them
+// dynamic is what keeps text readable).
+private fun ColorScheme.withFixedSemantics(canonical: ColorScheme): ColorScheme =
+    copy(
+        primary = canonical.primary,
+        onPrimary = canonical.onPrimary,
+        primaryContainer = canonical.primaryContainer,
+        onPrimaryContainer = canonical.onPrimaryContainer,
+        secondary = canonical.secondary,
+        onSecondary = canonical.onSecondary,
+        secondaryContainer = canonical.secondaryContainer,
+        onSecondaryContainer = canonical.onSecondaryContainer,
+        tertiary = canonical.tertiary,
+        onTertiary = canonical.onTertiary,
+        tertiaryContainer = canonical.tertiaryContainer,
+        onTertiaryContainer = canonical.onTertiaryContainer,
+        error = canonical.error,
+        onError = canonical.onError,
+        errorContainer = canonical.errorContainer,
+        onErrorContainer = canonical.onErrorContainer,
+        inversePrimary = canonical.inversePrimary,
+    )
 
 // The page turns black and every container takes the tone of the one below it, so cards still stand out from the page.
 private fun ColorScheme.withPureBlack(): ColorScheme =

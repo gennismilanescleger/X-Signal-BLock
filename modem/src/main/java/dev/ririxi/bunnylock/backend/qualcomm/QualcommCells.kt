@@ -24,6 +24,9 @@ internal fun qualcommCells(report: JSONObject): List<Cell> {
                     rsrp = lte.rsrpOrNull(),
                     source = "modem",
                     note = "LTE anchor (PCell)",
+                    // The serving report already parses these (Qualcomm.putLteIntraFrequency); -1 means absent.
+                    eci = lte.optLong("eci", -1).takeIf { it >= 0 },
+                    tac = lte.optInt("tac", -1).takeIf { it >= 0 },
                 )
         }
     }
@@ -41,6 +44,9 @@ internal fun qualcommCells(report: JSONObject): List<Cell> {
                     rsrp = nr.rsrpOrNull(),
                     source = "modem",
                     note = if (report.has("lte")) "NSA SCG" else "SA PCell",
+                    // The serving report already parses this (Qualcomm.putNrCell); -1 means absent.
+                    // The NR tracking area code is skipped there, so it stays null from QMI.
+                    nci = nr.optLong("nci", -1).takeIf { it >= 0 },
                 )
         }
     }

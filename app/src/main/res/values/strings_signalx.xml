@@ -1,0 +1,5 @@
+<resources>
+    <string name="measure_saved">Measurement saved — %1$s · RSRP %2$s</string>
+    <string name="measure_saved_no_cell">Nothing to save — no serving cell.</string>
+    <string name="measure_saved_failed">The measurement could not be saved.</string>
+</resources>

@@ -1,0 +1,8 @@
+<resources>
+    <string name="hub_group_field">Orientation and field</string>
+    <string name="hub_group_system">System</string>
+    <string name="hub_orientation_hint">Map, compass and where to install</string>
+    <string name="hub_bands_hint">Network mode and band locks</string>
+    <string name="hub_tools_hint">Radio, consoles, diagnostics and log</string>
+    <string name="hub_settings_hint">Backend, appearance, language and updates</string>
+</resources>

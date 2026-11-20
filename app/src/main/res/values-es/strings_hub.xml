@@ -1,0 +1,8 @@
+<resources>
+    <string name="hub_group_field">Orientación y campo</string>
+    <string name="hub_group_system">Sistema</string>
+    <string name="hub_orientation_hint">Mapa, brújula y dónde instalar</string>
+    <string name="hub_bands_hint">Modo de red y bloqueos de banda</string>
+    <string name="hub_tools_hint">Radio, consolas, diagnóstico y registro</string>
+    <string name="hub_settings_hint">Backend, apariencia, idioma y actualizaciones</string>
+</resources>

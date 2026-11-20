@@ -29,6 +29,7 @@ class MainActivity : ComponentActivity() {
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
             vm.loadSims()
             vm.refresh()
+            vm.startOrientation()
         }
 
     override fun attachBaseContext(newBase: Context) {
@@ -71,6 +72,12 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         vm.resumed()
+        vm.startOrientation()
+    }
+
+    override fun onPause() {
+        vm.stopOrientation()
+        super.onPause()
     }
 
     override fun onNewIntent(intent: Intent) {

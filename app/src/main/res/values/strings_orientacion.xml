@@ -1,0 +1,106 @@
+<resources>
+    <!-- Orientation (Herramientas > Orientación, Fase 5). Tabs in Spanish, body in English, as the rest of the UI. -->
+    <string name="orient_title">Orientation</string>
+    <string name="orient_section_map">Map</string>
+    <string name="orient_section_compass">Compass</string>
+
+    <!-- Map -->
+    <string name="orient_map_no_target">No target — pick an antenna in Antennas, or tap a tower pin on the map.</string>
+    <string name="orient_map_go_antennas">Choose antenna</string>
+    <string name="orient_map_target">Target</string>
+    <string name="orient_map_serving">Serving</string>
+    <string name="orient_map_clear_target">Clear target</string>
+    <string name="orient_map_legend_target">Target line — you to the target</string>
+    <string name="orient_map_legend_heading">Heading ray — where the phone points</string>
+    <string name="orient_map_zoom_in">Zoom in</string>
+    <string name="orient_map_zoom_out">Zoom out</string>
+    <string name="orient_map_my_location">Center on my location</string>
+    <string name="orient_map_north">Back to north up</string>
+    <string name="orient_map_fullscreen">Full screen</string>
+    <string name="orient_map_exit_fullscreen">Exit full screen</string>
+    <string name="orient_map_manage">Manage maps</string>
+    <string name="orient_map_placing">Tap the map to place eNB %1$d</string>
+    <string name="orient_map_placing_cancel">Cancel placing</string>
+    <string name="orient_map_place_title">Place eNB %1$d here?</string>
+    <string name="orient_map_place_message">Position %1$s. You can move it later from Antennas.</string>
+    <string name="orient_map_no_location">No GPS fix yet — wait for a fix or check location is on.</string>
+    <string name="orient_map_grid">Grid — no map for this area. Import a .map file or switch to Online.</string>
+    <string name="orient_map_source_file">Offline map</string>
+    <string name="orient_map_source_online">Online</string>
+    <string name="orient_map_source_grid">Grid</string>
+    <string name="orient_map_attribution">© OpenStreetMap contributors</string>
+    <string name="orient_map_online_no_cache">No connection and no saved tiles for this area.</string>
+    <string name="orient_map_cached_tiles">%1$d tiles in view</string>
+    <string name="orient_map_try_online">Try online again</string>
+    <string name="orient_map_distance">Distance</string>
+    <string name="orient_map_azimuth">Azimuth</string>
+    <string name="orient_map_serving_here">Serving cell is the target</string>
+
+    <!-- Map management (one experience, one progress strip) -->
+    <string name="orient_maps_title">Maps</string>
+    <string name="orient_maps_active">Active map</string>
+    <string name="orient_maps_none">No offline map loaded</string>
+    <string name="orient_maps_import">Import .map file</string>
+    <string name="orient_maps_import_hint">A .map file comes from your files, never from inside the app. Santiago (1.5 MB) is the only city map made so far.</string>
+    <string name="orient_maps_imported">Map imported: %1$s</string>
+    <string name="orient_maps_import_failed">That file is not a valid .map file.</string>
+    <string name="orient_maps_download_cuba">Download Cuba (whole country)</string>
+    <string name="orient_maps_download_cuba_size">About 62 MB, from download.mapsforge.org</string>
+    <string name="orient_maps_santiago_no_url">Santiago has no download yet — import its .map file instead.</string>
+    <string name="orient_maps_delete">Delete</string>
+    <string name="orient_maps_delete_title">Delete this map?</string>
+    <string name="orient_maps_delete_message">Deletes %1$s from the phone. The download can be repeated later.</string>
+    <string name="orient_maps_use">Use this map</string>
+    <string name="orient_maps_online">Online (view while browsing)</string>
+    <string name="orient_maps_online_hint">Tiles load only for the area on screen, and are kept for a week so revisits work offline. No bulk download.</string>
+    <string name="orient_maps_cache">Tile cache</string>
+    <string name="orient_maps_clear_cache">Clear tile cache</string>
+    <string name="orient_maps_cache_cleared">Tile cache cleared.</string>
+    <string name="orient_maps_downloading">Downloading %1$s</string>
+    <string name="orient_maps_paused">Paused — partial download kept</string>
+    <string name="orient_maps_pause">Pause</string>
+    <string name="orient_maps_resume">Resume</string>
+    <string name="orient_maps_cancel">Cancel</string>
+    <string name="orient_maps_failed_no_connection">No connection</string>
+    <string name="orient_maps_failed_cut">Connection cut — try again</string>
+    <string name="orient_maps_failed_no_response">Server did not answer</string>
+    <string name="orient_maps_failed_server">Server error</string>
+    <string name="orient_maps_failed_no_space">Not enough space on the phone</string>
+    <string name="orient_maps_downloaded">Map downloaded: %1$s</string>
+    <string name="orient_maps_already_downloading">A download is already running.</string>
+
+    <!-- Compass -->
+    <string name="orient_compass_no_sensor">This phone has no compass sensor.</string>
+    <string name="orient_compass_unreliable">Compass accuracy is low — the heading may be off.</string>
+    <string name="orient_compass_heading">Heading</string>
+    <string name="orient_compass_target_bearing">Target bearing</string>
+    <string name="orient_compass_no_target">No target selected. Pick an antenna to aim at it.</string>
+    <string name="orient_compass_gps">GPS precision</string>
+    <string name="orient_compass_no_gps">Waiting for GPS…</string>
+    <string name="orient_compass_info_title">What each number means</string>
+    <string name="orient_compass_info_text">Signal: the strength of the cell you are on, in dBm. Closer to zero is stronger; −100 dBm or better counts as strong here.\n\nDirection: how far your heading is from the line to the target. Within 5° counts as lined up.\n\nGPS precision: how exact your position is, in metres. 15 m or better counts as precise. A bigger number means the phone is still guessing where you are.\n\nWhen all three are good at the same time, the spot is right for installing.</string>
+
+    <!-- "Where to install?" — inside the compass, not a separate mode -->
+    <string name="orient_install_title">Where to install?</string>
+    <string name="orient_install_signal">Signal now %1$s · best this session %2$s</string>
+    <string name="orient_install_guide_up">Keep walking this way (%1$s) — signal is going up.</string>
+    <string name="orient_install_guide_down">Signal is going down this way — turn around.</string>
+    <string name="orient_install_guide_same">Signal is about the same here — keep walking to compare.</string>
+    <string name="orient_install_guide_start">Walk a few metres and the signal change will show here.</string>
+    <string name="orient_install_signal_ok">Strong signal (%1$s)</string>
+    <string name="orient_install_signal_no">Weak signal (%1$s) — needs −100 dBm or better</string>
+    <string name="orient_install_signal_none">No signal reading yet</string>
+    <string name="orient_install_dir_ok">Facing the target (off by %1$d°)</string>
+    <string name="orient_install_dir_no">Not facing the target (off by %1$d°)</string>
+    <string name="orient_install_dir_none">No target — direction cannot be checked</string>
+    <string name="orient_install_gps_ok">Precise GPS (±%1$d m)</string>
+    <string name="orient_install_gps_no">GPS too imprecise (±%1$d m) — needs ±15 m or better</string>
+    <string name="orient_install_gps_none">No GPS fix yet</string>
+    <string name="orient_install_optimal">OPTIMAL CONNECTION — THIS SPOT IS RIGHT</string>
+    <string name="orient_install_save_point">Save point</string>
+    <string name="orient_install_save_measure">Save measurement</string>
+    <string name="orient_install_save_hint">Saves position, heading and signal. The photo comes with the camera.</string>
+    <string name="orient_point_saved">Point saved — %1$s</string>
+    <string name="orient_point_no_gps">No GPS fix yet — the point needs a position.</string>
+    <string name="orient_compass_open_map">Open map</string>
+</resources>

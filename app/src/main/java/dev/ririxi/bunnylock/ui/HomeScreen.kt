@@ -2,7 +2,6 @@
 
 package dev.ririxi.bunnylock.ui
 
-import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
@@ -31,6 +30,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Refresh
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroup
@@ -56,7 +56,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -71,13 +70,42 @@ import dev.ririxi.bunnylock.modem.ImsFeature
 import dev.ririxi.bunnylock.modem.ImsSetting
 import dev.ririxi.bunnylock.modem.ModemState
 import dev.ririxi.bunnylock.modem.formatPlmn
+import dev.ririxi.bunnylock.signalx.MeasurementSummary
+import dev.ririxi.bunnylock.signalx.servingReading
+import dev.ririxi.bunnylock.ui.design.SxCard
+import dev.ririxi.bunnylock.ui.design.SxDataRow
+import dev.ririxi.bunnylock.ui.design.SxDialog
+import dev.ririxi.bunnylock.ui.design.SxFormat
+import dev.ririxi.bunnylock.ui.design.SxPrimaryButton
+import dev.ririxi.bunnylock.ui.design.SxSecondaryButton
+import dev.ririxi.bunnylock.ui.design.SxSectionHeader
+import dev.ririxi.bunnylock.ui.design.SxSignalIndicator
+import dev.ririxi.bunnylock.ui.design.SxSignalPill
+import dev.ririxi.bunnylock.ui.design.SxSignalThresholds
+import dev.ririxi.bunnylock.ui.design.SxSpacing
+import dev.ririxi.bunnylock.ui.design.SxStatusChip
+import dev.ririxi.bunnylock.ui.design.SxTone
+import dev.ririxi.bunnylock.ui.design.mono
+import dev.ririxi.bunnylock.ui.design.ratStyle
 import dev.ririxi.bunnylock.ui.theme.LocalLockGreen
 import dev.ririxi.bunnylock.ui.theme.LocalSignalScale
 
-private val RSRP_STEPS = listOf(-80, -90, -100)
-private val PLAIN_DBM_STEPS = listOf(-70, -85, -100)
-private val RSRQ_STEPS = listOf(-10, -15, -20)
-private val SINR_STEPS = listOf(20, 13, 0)
+// Home pilot — Fase 1. Same data, same actions, new visual system.
+// Everything on this screen still comes from the real modem state
+// (state.modem) and every button still calls the real MainViewModel.
+// What changed is presentation only: SxCard / SxSectionHeader / SxDataRow /
+// SxSignalIndicator / SxStatusChip / SxSignalPill / SxDialog from
+// ui/design, colours and type from the SignalX tokens.
+// One addition, no removal: the visible-cells list (state.modem.cells,
+// same sort and same CellItem as CellScreen) is now shown here too — the
+// Fase 0 map said Home had it, but the old Home never rendered it; tapping
+// a cell fills the lock form (vm.fillFrom) and goes to the Antenas tab.
+//
+// Fase 3: the Inicio summary (superprompt §3.2) — serving-cell summary
+// (same card as Explorar, summary form), signal metrics with RSSI, quick
+// actions (Explore / Antenas / Save measurement), the auto-collection
+// line and the last saved measurement. Location is not shown on Inicio:
+// the fix lives in the map and compass, where it is used.
 
 @Composable
 fun HomeScreen(
@@ -85,24 +113,109 @@ fun HomeScreen(
     vm: MainViewModel,
     contentPadding: PaddingValues,
     goTo: (Tab) -> Unit,
+    goToBands: () -> Unit,
+    goToSettings: () -> Unit,
 ) {
+    val nowMs = rememberNowMs(state.modem.readingAtMs != null)
+    val readingAgeSec = state.modem.readingAtMs?.let { ((nowMs - it) / 1000).coerceAtLeast(0) }
     LazyColumn(contentPadding = contentPadding.withScreenMargins(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         item {
-            Hero(state, onUnlock = vm::unlockEverything, onRelock = vm::relock, onBands = { goTo(Tab.BANDS) }, onCell = { goTo(Tab.CELL) })
+            Hero(state, onUnlock = vm::unlockEverything, onRelock = vm::relock, onBands = goToBands, onCell = { goTo(Tab.ANTENAS) })
         }
 
         val carriers = state.modem.carriers
         item {
-            SectionHeader(stringResource(R.string.home_connection))
-            if (carriers.isEmpty()) Panel { SleepyBunny(stringResource(R.string.home_no_serving_cell)) } else ConnectionCard(state.modem)
+            SxSectionHeader(stringResource(R.string.home_connection))
+            if (carriers.isEmpty()) SxCard { SleepyBunny(stringResource(R.string.home_no_serving_cell)) } else ConnectionCard(state.modem)
+        }
+
+        // Fase 3: serving-cell summary — the same card as Explorar, in
+        // summary form (eNB/sector, band, PCI, TAC, ECI, reading age).
+        item {
+            val reading = state.modem.servingReading()
+            val carrier = reading?.carrier
+            SxSectionHeader(stringResource(R.string.explorar_serving))
+            if (carrier == null) {
+                SxCard { SleepyBunny(stringResource(R.string.home_no_serving_cell)) }
+            } else {
+                ServingCellCard(carrier, reading.signal, reading.cell, state.modem, readingAgeSec, detailed = false)
+            }
+        }
+
+        item {
+            SxSectionHeader(stringResource(R.string.home_quick_actions))
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    SxSecondaryButton(
+                        stringResource(R.string.home_explore),
+                        onClick = { goTo(Tab.EXPLORAR) },
+                        modifier = Modifier.weight(1f),
+                        icon = Icons.Rounded.Search,
+                    )
+                    SxSecondaryButton(
+                        stringResource(R.string.home_antennas),
+                        onClick = { goTo(Tab.ANTENAS) },
+                        modifier = Modifier.weight(1f),
+                        icon = BunnyIcons.Tower,
+                    )
+                }
+                SxPrimaryButton(
+                    stringResource(R.string.explorar_save),
+                    onClick = vm::saveMeasurement,
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = state.modem.carriers.isNotEmpty() && !state.busy,
+                )
+            }
+        }
+
+        item {
+            AutoCollectionRow(state.autoCollect, onOpenSettings = goToSettings)
+        }
+
+        // Recent activity, only when something has been saved.
+        state.lastMeasurement?.let { last ->
+            item {
+                SxSectionHeader(stringResource(R.string.home_last_measurement))
+                SxCard {
+                    Text(lastIdentity(last), style = MaterialTheme.typography.titleMediumEmphasized.mono())
+                    SxDataRow("RSRP", SxFormat.formatDbm(last.rsrp), monoValue = true)
+                    SxDataRow(
+                        stringResource(R.string.home_last_saved),
+                        SxFormat.formatAge(((nowMs - last.timeMs) / 1000).coerceAtLeast(0)),
+                    )
+                    SxDataRow(stringResource(R.string.explorar_neighbors), last.neighborCount.toString(), monoValue = true)
+                }
+            }
         }
 
         if (carriers.isNotEmpty()) {
             item {
                 val anchoredOnLte = carriers.any { it.primary && it.rat == Rat.LTE }
-                SectionHeader(pluralStringResource(R.plurals.home_carriers_header, carriers.size))
+                SxSectionHeader(pluralStringResource(R.plurals.home_carriers_header, carriers.size), count = carriers.size)
                 Segmented(Modifier.animateContentSize()) {
                     carriers.forEach { carrier -> item { shapes -> CarrierItem(shapes, carrier, anchoredOnLte) } }
+                }
+            }
+        }
+
+        item {
+            val lockableCells =
+                state.modem.cells
+                    .filter { it.rat == Rat.LTE || it.rat == Rat.NR }
+                    .sortedWith(compareByDescending<Cell> { it.registered }.thenByDescending { it.rat.ordinal }.thenBy { it.arfcn }.thenBy { it.pci })
+            SxSectionHeader(pluralStringResource(R.plurals.home_visible_cells_header, lockableCells.size), count = lockableCells.size)
+            if (lockableCells.isEmpty()) {
+                SxCard { SleepyBunny(stringResource(R.string.cell_none_found), stringResource(R.string.cell_none_found_hint)) }
+            } else {
+                Segmented {
+                    lockableCells.forEach { cell ->
+                        item { shapes ->
+                            CellItem(shapes, cell) {
+                                vm.fillFrom(cell)
+                                goTo(Tab.ANTENAS)
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -116,12 +229,13 @@ fun HomeScreen(
                     device?.socModel?.ifEmpty { null },
                     device?.platform?.ifEmpty { null },
                 ).joinToString(", ")
-            SectionHeader(stringResource(R.string.common_modem))
-            Segmented {
-                item { InfoItem(it, stringResource(R.string.home_chipset), chipset) }
-                item { InfoItem(it, stringResource(R.string.common_device), deviceName) }
-                item { InfoItem(it, stringResource(R.string.common_platform), platform) }
-                item { InfoItem(it, stringResource(R.string.common_baseband), device?.baseband.orEmpty()) }
+            val unknown = stringResource(R.string.common_unknown)
+            SxSectionHeader(stringResource(R.string.common_modem))
+            SxCard {
+                SxDataRow(stringResource(R.string.home_chipset), chipset.ifEmpty { unknown })
+                SxDataRow(stringResource(R.string.common_device), deviceName.ifEmpty { unknown })
+                SxDataRow(stringResource(R.string.common_platform), platform.ifEmpty { unknown })
+                SxDataRow(stringResource(R.string.common_baseband), device?.baseband.orEmpty().ifEmpty { unknown })
             }
         }
     }
@@ -159,17 +273,22 @@ private fun Hero(
     val askToUnlock = { confirmUnlock = true }
     val idle = !state.busy
     if (confirmUnlock) {
-        ConfirmDialog(
+        SxDialog(
             title = stringResource(R.string.home_unlock_all_title),
-            message = stringResource(R.string.home_unlock_all_message),
+            text = stringResource(R.string.home_unlock_all_message),
             confirmLabel = unlockLabel,
-            icon = BunnyIcons.LockOpen,
-            onConfirm = onUnlock,
+            onConfirm = {
+                confirmUnlock = false
+                onUnlock()
+            },
             onDismiss = { confirmUnlock = false },
+            dismissLabel = stringResource(R.string.common_cancel),
+            icon = BunnyIcons.LockOpen,
+            destructiveConfirm = true,
         )
     }
-    Surface(color = containerColor, shape = RoundedCornerShape(36.dp), modifier = Modifier.fillMaxWidth()) {
-        Column(Modifier.padding(24.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+    Surface(color = containerColor, shape = RoundedCornerShape(SxSpacing.CardRadius), modifier = Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(SxSpacing.CardPaddingLarge), verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
                     Text(
@@ -200,12 +319,7 @@ private fun Hero(
             val lockRows = activeLockRows(state)
             if (lockRows.isNotEmpty()) {
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    lockRows.forEach { (label, value) ->
-                        Row {
-                            Text(label, style = MaterialTheme.typography.labelLargeEmphasized, modifier = Modifier.width(96.dp))
-                            Text(value, style = MaterialTheme.typography.bodyMedium)
-                        }
-                    }
+                    lockRows.forEach { (label, value) -> SxDataRow(label, value) }
                 }
             }
 
@@ -296,7 +410,7 @@ private fun ButtonGroupScope.groupItem(
     },
 )
 
-@StringRes
+@androidx.annotation.StringRes
 private fun pinnedSummary(state: UiState): Int {
     val bands = state.modem.anyBandLock
     val cell = state.modem.anyCellLock
@@ -326,15 +440,6 @@ private fun activeLockRows(state: UiState): List<Pair<String, String>> =
         state.modem.legacyCellLock?.let { add(stringResource(R.string.home_row_legacy_cell) to it) }
     }
 
-private fun channelName(rat: Rat) =
-    when (rat) {
-        Rat.LTE -> "EARFCN"
-        Rat.WCDMA -> "UARFCN"
-        else -> "ARFCN"
-    }
-
-private fun megahertz(khz: Int): String = if (khz % 1000 == 0) "${khz / 1000}" else "%.1f".format(khz / 1000.0)
-
 @Composable
 private fun techSummary(carriers: List<Carrier>): String {
     val lteCount = carriers.count { it.rat == Rat.LTE }
@@ -361,29 +466,11 @@ private fun totalBandwidth(carriers: List<Carrier>): String? {
     val known = carriers.mapNotNull { it.bandwidthKhz }
     if (known.isEmpty()) return null
     val more = if (known.size < carriers.size) "+" else ""
-    return "${megahertz(known.sum())}$more MHz"
-}
-
-@Composable
-private fun signalColor(
-    value: Int,
-    steps: List<Int>,
-): Color {
-    val step = steps.indexOfFirst { value >= it }
-    return LocalSignalScale.current[if (step < 0) steps.size else step]
+    return "${SxFormat.megahertz(known.sum())}$more MHz"
 }
 
 // 2G and 3G report RSSI, which runs higher than RSRP.
-private fun dbmSteps(rat: Rat) = if (rat == Rat.LTE || rat == Rat.NR) RSRP_STEPS else PLAIN_DBM_STEPS
-
-@Composable
-private fun ratColor(rat: Rat): Color =
-    when (rat) {
-        Rat.NR -> MaterialTheme.colorScheme.primary
-        Rat.LTE -> MaterialTheme.colorScheme.tertiary
-        Rat.WCDMA -> MaterialTheme.colorScheme.secondary
-        Rat.GSM -> MaterialTheme.colorScheme.outline
-    }
+private fun dbmSteps(rat: Rat) = if (rat == Rat.LTE || rat == Rat.NR) SxSignalThresholds.Rsrp else SxSignalThresholds.PlainDbm
 
 @Composable
 private fun ConnectionCard(modem: ModemState) {
@@ -392,7 +479,7 @@ private fun ConnectionCard(modem: ModemState) {
     val primaryRat = carriers.first().rat
     val signals = modem.signals.filter { it.rsrp !== null || it.rsrq !== null || it.sinr !== null }.sortedBy { it.rat != primaryRat }
     val motion = MaterialTheme.motionScheme
-    Panel(Modifier.animateContentSize(motion.defaultSpatialSpec()), padding = PaddingValues(20.dp)) {
+    SxCard(Modifier.animateContentSize(motion.defaultSpatialSpec()), padding = PaddingValues(SxSpacing.CardPaddingLarge)) {
         Row {
             Column(Modifier.weight(1f)) {
                 Text(network, style = MaterialTheme.typography.titleMediumEmphasized)
@@ -427,11 +514,12 @@ private fun FeatureTags(modem: ModemState) {
     val imsFeatures = ImsFeature.entries.mapNotNull { feature -> (modem.ims[feature] as? ImsSetting.Readable)?.let { feature.label to it.enabled } }
     val features = imsFeatures + listOfNotNull(modem.carrierAggregation?.let { "CA" to it })
     if (features.isEmpty()) return
-    val colors = MaterialTheme.colorScheme
     FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
         features.forEach { (name, on) ->
-            val (container, content) = if (on) colors.secondaryContainer to colors.onSecondaryContainer else colors.surfaceContainerHighest to colors.onSurfaceVariant
-            Tag(stringResource(if (on) R.string.home_feature_on else R.string.home_feature_off, name), container, content)
+            SxStatusChip(
+                stringResource(if (on) R.string.home_feature_on else R.string.home_feature_off, name),
+                tone = if (on) SxTone.Signal else SxTone.Neutral,
+            )
         }
     }
 }
@@ -445,7 +533,7 @@ private fun BandwidthBar(carriers: List<Carrier>) {
             key(carrier.rat, carrier.arfcn, carrier.pci) {
                 val shownWidth = remember { Animatable(0f) }
                 LaunchedEffect(width) { shownWidth.animateTo(width.toFloat(), motion.defaultSpatialSpec()) }
-                val color by animateColorAsState(ratColor(carrier.rat).copy(alpha = if (carrier.primary) 1f else 0.55f), label = "carrier")
+                val color by animateColorAsState(ratStyle(carrier.rat).content.copy(alpha = if (carrier.primary) 1f else 0.55f), label = "carrier")
                 Box(
                     Modifier
                         .weight(shownWidth.value.coerceAtLeast(1f))
@@ -463,67 +551,56 @@ private fun SignalRow(
     signal: Signal,
     showRat: Boolean,
 ) {
-    Row(horizontalArrangement = Arrangement.spacedBy(20.dp), verticalAlignment = Alignment.CenterVertically) {
-        if (showRat) RatBadge(signal.rat, size = 32.dp)
-        signal.rsrp?.let { Metric("RSRP", "$it dBm", signalColor(it, RSRP_STEPS)) }
-        signal.rsrq?.let { Metric("RSRQ", "$it dB", signalColor(it, RSRQ_STEPS)) }
-        signal.sinr?.let { Metric("SINR", "$it dB", signalColor(it, SINR_STEPS)) }
+    val scale = LocalSignalScale.current
+    // Two rows of two: RSRP/RSRQ over SINR/RSSI. Every metric renders
+    // with its number and word even when the modem reports nothing
+    // (SxSignalIndicator shows "—"); RSSI is LTE-only, since Android
+    // reports no RSSI for NR.
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(20.dp), verticalAlignment = Alignment.CenterVertically) {
+            if (showRat) RatBadge(signal.rat, size = 32.dp)
+            SxSignalIndicator("RSRP", signal.rsrp, "dBm", SxSignalThresholds.Rsrp, scale, Modifier.weight(1f))
+            if (signal.rat == Rat.LTE || signal.rat == Rat.NR) {
+                SxSignalIndicator("RSRQ", signal.rsrq, "dB", SxSignalThresholds.Rsrq, scale, Modifier.weight(1f))
+            }
+        }
+        if (signal.rat == Rat.LTE || signal.rat == Rat.NR) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+                SxSignalIndicator("SINR", signal.sinr, "dB", SxSignalThresholds.Sinr, scale, Modifier.weight(1f))
+                if (signal.rat == Rat.LTE) {
+                    SxSignalIndicator("RSSI", signal.rssi, "dBm", SxSignalThresholds.PlainDbm, scale, Modifier.weight(1f))
+                } else {
+                    Spacer(Modifier.weight(1f))
+                }
+            }
+        }
     }
 }
 
-@Composable
-private fun Metric(
-    label: String,
-    value: String,
-    color: Color,
-) {
-    Column {
-        Text(label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Text(value, style = MaterialTheme.typography.titleMediumEmphasized, color = animateColorAsState(color, label = label).value)
+private fun lastIdentity(last: MeasurementSummary): String =
+    when {
+        last.eci != null -> SxFormat.formatEnbSector(last.eci)
+        last.nci != null -> SxFormat.formatNci(last.nci)
+        else -> ratDisplayName(last.rat)
     }
-}
-
-@Composable
-private fun Tag(
-    text: String,
-    container: Color,
-    content: Color,
-) {
-    Surface(color = container, contentColor = content, shape = RoundedCornerShape(8.dp)) {
-        Text(text, style = MaterialTheme.typography.labelSmall, maxLines = 1, softWrap = false, modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp))
-    }
-}
-
-@Composable
-private fun SignalPill(
-    dbm: Int,
-    rat: Rat,
-) {
-    val color by animateColorAsState(signalColor(dbm, dbmSteps(rat)), label = "signal")
-    Surface(color = color.copy(alpha = 0.16f), contentColor = color, shape = RoundedCornerShape(50)) {
-        Text("$dbm dBm", style = MaterialTheme.typography.labelLargeEmphasized, modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp))
-    }
-}
 
 @Composable
 private fun RoleTag(
     carrier: Carrier,
     anchoredOnLte: Boolean,
 ) {
-    val colors = MaterialTheme.colorScheme
     when {
-        carrier.primary -> Tag(stringResource(R.string.home_tag_primary), colors.secondaryContainer, colors.onSecondaryContainer)
-        carrier.rat == Rat.NR && anchoredOnLte -> Tag("5G NSA", colors.primaryContainer, colors.onPrimaryContainer)
-        else -> Tag(stringResource(R.string.home_tag_secondary), colors.surfaceContainerHighest, colors.onSurfaceVariant)
+        carrier.primary -> SxStatusChip(stringResource(R.string.home_tag_primary), SxTone.Neutral)
+        carrier.rat == Rat.NR && anchoredOnLte -> SxStatusChip("5G NSA", SxTone.Info)
+        else -> SxStatusChip(stringResource(R.string.home_tag_secondary), SxTone.Neutral)
     }
 }
 
 @Composable
 private fun CellTag(cell: Cell) {
-    val colors = MaterialTheme.colorScheme
     when {
-        cell.note == "NSA SCG" -> Tag("5G NSA", colors.primaryContainer, colors.onPrimaryContainer)
-        cell.registered -> Tag(stringResource(R.string.home_tag_serving), colors.secondaryContainer, colors.onSecondaryContainer)
+        cell.note == "NSA SCG" -> SxStatusChip("5G NSA", SxTone.Info)
+        cell.registered -> SxStatusChip(stringResource(R.string.home_tag_serving), SxTone.Signal)
     }
 }
 
@@ -534,9 +611,9 @@ private fun radioDetails(
     bandwidthKhz: Int?,
 ): String =
     listOfNotNull(
-        arfcn?.let { "${channelName(rat)} $it" },
+        arfcn?.let { "${SxFormat.channelName(rat)} $it" },
         pci?.let { "PCI $it" },
-        bandwidthKhz?.let { "${megahertz(it)} MHz" },
+        bandwidthKhz?.let { "${SxFormat.megahertz(it)} MHz" },
     ).joinToString(" · ")
 
 @Composable
@@ -551,7 +628,7 @@ private fun RadioRow(
     onClick: (() -> Unit)? = null,
 ) {
     val leading: @Composable () -> Unit = { RatBadge(rat) }
-    val trailing: @Composable () -> Unit = { rsrp?.let { SignalPill(it, rat) } }
+    val trailing: @Composable () -> Unit = { rsrp?.let { SxSignalPill(it, dbmSteps(rat), LocalSignalScale.current) } }
     val supporting: (@Composable () -> Unit)? = if (details.isEmpty()) null else ({ Text(details) })
     val content: @Composable () -> Unit = {
         FlowRow(

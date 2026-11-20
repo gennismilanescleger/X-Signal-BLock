@@ -1,0 +1,29 @@
+<resources>
+    <string name="cell_network_header">Red (PLMN)</string>
+    <string name="cell_current_lock">Cell lock actual</string>
+    <string name="cell_clear_lock">Quitar cell lock</string>
+    <string name="cell_lock_to">Bloquear en</string>
+    <string name="cell_visible">Celdas visibles (toca una para rellenar)</string>
+    <string name="cell_none_found">No se encontraron celdas</string>
+    <string name="cell_none_found_hint">Para escanear celdas hace falta acceso a la ubicación.</string>
+    <string name="cell_plmn_automatic">Automático</string>
+    <string name="cell_plmn_locked_to">Bloqueado en %1$s</string>
+    <string name="cell_not_registered">No registrado en ninguna red.</string>
+    <string name="cell_connected">Conectado a %1$s.</string>
+    <string name="cell_connected_named">Conectado a %1$s (%2$s).</string>
+    <string name="cell_lock_ignored">Ignorado</string>
+    <string name="cell_lock_locked">Bloqueado</string>
+    <string name="cell_lock_none">Sin bloquear</string>
+    <string name="cell_lock_stray">Android aceptó el bloqueo, pero el teléfono está en %1$s.</string>
+    <string name="cell_lock_pinned">El módem está fijo en una celda concreta.</string>
+    <string name="cell_lock_free">El módem elige las celdas por su cuenta.</string>
+    <string name="cell_lte_channel">B%1$d a %2$.1f MHz</string>
+    <string name="cell_lte_anchor">Ancla LTE</string>
+    <string name="cell_nr_scg">NR secundario (SCG)</string>
+    <string name="cell_pcis">PCIs</string>
+    <string name="cell_band">Banda</string>
+    <string name="cell_scs">Separación de subportadoras (kHz)</string>
+    <string name="cell_clear_lock_title">¿Quitar el cell lock?</string>
+    <string name="cell_clear_lock_message">El módem podrá elegir cualquier celda de nuevo. Para bloquear la misma celda luego, necesitarás su canal y su PCI.</string>
+    <string name="cell_retry_at_lock">Intentar AT+EMMCHLCK de nuevo</string>
+</resources>

@@ -315,6 +315,7 @@ class ModemController(
                         cells = cells,
                         carriers = carriers,
                         signals = signals,
+                        readingAtMs = System.currentTimeMillis(),
                         allowedMask = readout.allowedMask ?: aospState?.takeIf { it.has("allowed") }?.optLong("allowed"),
                         supportedTypes = aospState?.takeIf { it.has("supportedTypes") }?.optLong("supportedTypes"),
                         netModeHeldBack = aospState?.optText("modeHeldBack")?.let { context.string(it) },
@@ -356,7 +357,7 @@ class ModemController(
         if (current.refreshing || current.sim != sim) return
         session.update {
             val liveGroups = if (bandLocksThroughHal && !settling) withStrayBands(groups, lteLock, nrLock, cells, carriers) else groups
-            copy(cells = cells, carriers = carriers, signals = signals, groups = liveGroups)
+            copy(cells = cells, carriers = carriers, signals = signals, groups = liveGroups, readingAtMs = System.currentTimeMillis())
         }
     }
 

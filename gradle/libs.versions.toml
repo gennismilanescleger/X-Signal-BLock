@@ -11,6 +11,7 @@ shizuku = "13.1.5"
 coroutines = "1.9.0"
 hiddenApiBypass = "6.1"
 annotation = "1.10.0"
+mapsforge = "0.25.0"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
@@ -28,6 +29,7 @@ shizuku-provider = { module = "dev.rikka.shizuku:provider", version.ref = "shizu
 hidden-api-bypass = { module = "org.lsposed.hiddenapibypass:hiddenapibypass", version.ref = "hiddenApiBypass" }
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+mapsforge-map-android = { module = "org.mapsforge:mapsforge-map-android", version.ref = "mapsforge" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

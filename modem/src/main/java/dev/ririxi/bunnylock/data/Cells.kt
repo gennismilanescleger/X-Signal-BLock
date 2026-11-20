@@ -62,6 +62,14 @@ data class Cell(
     val operator: String? = null,
     /** Only LTE cells report it, and usually only the serving one. */
     val bandwidthKhz: Int? = null,
+    /** LTE ECI (28-bit cell identity). Null for other RATs and when the modem doesn't report it. */
+    val eci: Long? = null,
+    /** NR NCI (36-bit cell identity). Null for other RATs and when the modem doesn't report it. */
+    val nci: Long? = null,
+    /** Tracking area code (LTE and NR). Null when the modem doesn't report it. */
+    val tac: Int? = null,
+    /** LTE RSSI in dBm. Android reports no RSSI for NR. Null when not reported. */
+    val rssi: Int? = null,
 ) {
     val key get() = "$rat:$arfcn:$pci"
 
@@ -203,6 +211,9 @@ object Cells {
             rsrp = info.cellSignalStrength.rsrp.availableOrNull(),
             source = "android",
             bandwidthKhz = identity.bandwidth.availableOrNull(),
+            eci = identity.ci.takeIf { it != CellInfo.UNAVAILABLE }?.toLong(),
+            tac = identity.tac.availableOrNull(),
+            rssi = info.cellSignalStrength.rssi.availableOrNull(),
         )
     }
 
@@ -219,6 +230,9 @@ object Cells {
             registered = info.isRegistered,
             rsrp = signal.ssRsrp.availableOrNull(),
             source = "android",
+            // CellIdentityNr reports Long.MAX_VALUE when the NCI is unknown.
+            nci = identity.nci.takeIf { it != Long.MAX_VALUE },
+            tac = identity.tac.availableOrNull(),
         )
     }
 
@@ -269,6 +283,10 @@ object Cells {
                 plmn = earlier.plmn ?: cell.plmn,
                 operator = earlier.operator ?: cell.operator,
                 bandwidthKhz = earlier.bandwidthKhz ?: cell.bandwidthKhz,
+                eci = earlier.eci ?: cell.eci,
+                nci = earlier.nci ?: cell.nci,
+                tac = earlier.tac ?: cell.tac,
+                rssi = earlier.rssi ?: cell.rssi,
             ) ?: cell
         }
         return byKey.values.sortedWith(displayOrder)

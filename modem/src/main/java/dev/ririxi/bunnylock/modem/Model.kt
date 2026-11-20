@@ -263,6 +263,8 @@ data class ModemState(
     /** Primary first. */
     val carriers: List<Carrier> = emptyList(),
     val signals: List<Signal> = emptyList(),
+    /** Epoch ms of the last completed cell/signal refresh. Null before the first one. */
+    val readingAtMs: Long? = null,
     val lteLock: String? = null,
     val nrLock: String? = null,
     /** A 2G or 3G cell lock. bunnylock doesn't set these, but a MediaTek modem may hold one made elsewhere. */

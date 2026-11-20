@@ -1,0 +1,5 @@
+<resources>
+    <string name="measure_saved">Medición guardada — %1$s · RSRP %2$s</string>
+    <string name="measure_saved_no_cell">Nada que guardar — no hay celda servidora.</string>
+    <string name="measure_saved_failed">No se pudo guardar la medición.</string>
+</resources>

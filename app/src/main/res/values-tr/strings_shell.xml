@@ -1,8 +1,5 @@
 <resources>
-    <string name="shell_tab_home">Ana sayfa</string>
     <string name="shell_tab_bands">Bantlar</string>
-    <string name="shell_tab_cell">Hücre kilidi</string>
-    <string name="shell_tab_tools">Araçlar</string>
     <string name="shell_tab_settings">Ayarlar</string>
     <string name="shell_refresh">Yenile</string>
     <string name="shell_stop_waiting">Beklemeyi durdur</string>

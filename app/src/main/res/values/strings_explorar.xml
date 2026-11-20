@@ -1,0 +1,31 @@
+<resources>
+    <string name="explorar_serving">Serving cell</string>
+    <string name="explorar_signal">Signal quality</string>
+    <string name="explorar_neighbors">Neighbor cells</string>
+    <string name="explorar_reading">Reading state</string>
+    <string name="explorar_channel">Channel</string>
+    <string name="explorar_frequency">Frequency</string>
+    <string name="explorar_technology">Technology</string>
+    <string name="explorar_pci">PCI</string>
+    <string name="explorar_bandwidth">Bandwidth</string>
+    <string name="explorar_plmn">PLMN</string>
+    <string name="explorar_operator">Operator</string>
+    <string name="explorar_eci">ECI</string>
+    <string name="explorar_nci">NCI</string>
+    <string name="explorar_tac">TAC</string>
+    <string name="explorar_band">Band</string>
+    <string name="explorar_rssi">RSSI</string>
+    <string name="explorar_updated">Updated</string>
+    <string name="explorar_save">Save measurement</string>
+    <string name="explorar_auto_on">Auto-collection on</string>
+    <string name="explorar_auto_off">Auto-collection off</string>
+    <string name="explorar_auto_on_hint">Saves a measurement every 30 seconds or when the cell changes, while the app is open.</string>
+    <string name="explorar_auto_off_hint">Measurements are only saved when you tap Save measurement.</string>
+    <string name="explorar_notice_no_permission">Permission is needed to read cells. Grant it to see the serving cell.</string>
+    <string name="explorar_notice_open_settings">Open settings</string>
+    <string name="explorar_notice_stale">The last reading is stale. The modem may not be responding.</string>
+    <string name="explorar_no_neighbors">No neighbor cells visible — only the serving cell.</string>
+    <string name="explorar_notice_no_serving">No serving cell. The phone is not camped on any cell right now.</string>
+    <!-- Fase 7: the button fills the cell-lock form and lands on the Cell lock section, so it is named for that — "View in Antennas" said the catalog. -->
+    <string name="explorar_cell_lock">Cell lock</string>
+</resources>
