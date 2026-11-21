@@ -215,10 +215,12 @@ fun DiagnosticsScreen(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 } else {
+                    val eci = reading.cell?.eci
+                    val nci = reading.cell?.nci
                     val identity =
                         when {
-                            reading.cell?.eci != null -> SxFormat.formatEnbSector(reading.cell.eci)
-                            reading.cell?.nci != null -> SxFormat.formatNci(reading.cell.nci)
+                            eci != null -> SxFormat.formatEnbSector(eci)
+                            nci != null -> SxFormat.formatNci(nci)
                             else -> reading.carrier.bandLabel
                         }
                     SxDataRow(stringResource(R.string.diag_cell), identity, monoValue = true)

@@ -101,10 +101,12 @@ fun ServingCellCard(
             ?: modem.registeredPlmn?.let(::formatPlmn)
             ?: cell?.operator
             ?: stringResource(R.string.home_unknown_network)
+    val eci = cell?.eci
+    val nci = cell?.nci
     val title =
         when {
-            cell?.eci != null -> SxFormat.formatEnbSector(cell.eci)
-            cell?.nci != null -> SxFormat.formatNci(cell.nci)
+            eci != null -> SxFormat.formatEnbSector(eci)
+            nci != null -> SxFormat.formatNci(nci)
             carrier.band != null -> carrier.bandLabel
             else -> stringResource(R.string.common_unknown_band)
         }

@@ -87,7 +87,7 @@ private const val INSTALL_WALK_MIN_M = 5.0
 private const val INSTALL_WALK_MIN_DELTA_DBM = 3
 
 /** The walking guide, as data — the screen maps it to words. */
-private sealed class InstallGuide {
+sealed class InstallGuide {
     data object Start : InstallGuide()
     data class Up(val azimuthDeg: Double) : InstallGuide()
     data object Down : InstallGuide()
@@ -177,9 +177,10 @@ fun CompassScreen(
             null
         }
     val strong = rsrp != null && rsrp >= INSTALL_MIN_RSRP_DBM
+    val headingNow = heading
     val offDeg =
-        if (targetBearing != null && heading != null) {
-            abs(angleDiffDeg(targetBearing, heading.degrees.toDouble()))
+        if (targetBearing != null && headingNow != null) {
+            abs(angleDiffDeg(targetBearing, headingNow.degrees.toDouble()))
         } else {
             null
         }
@@ -220,7 +221,7 @@ fun CompassScreen(
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth(),
                     )
-                    if (heading != null && !heading.reliable) {
+                    if (headingNow != null && !headingNow.reliable) {
                         SxNotice(
                             stringResource(R.string.orient_compass_unreliable),
                             SxTone.Warning,

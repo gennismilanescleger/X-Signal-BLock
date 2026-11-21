@@ -125,7 +125,7 @@ fun SxCard(
 ) {
     val shape = RoundedCornerShape(SxSpacing.CardRadius)
     val border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
-    val body: @Composable ColumnScope.() -> Unit = {
+    val body: @Composable () -> Unit = {
         Column(Modifier.padding(padding), verticalArrangement = Arrangement.spacedBy(SxSpacing.Group), content = content)
     }
     if (onClick != null) {

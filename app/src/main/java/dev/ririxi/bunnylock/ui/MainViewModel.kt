@@ -572,10 +572,12 @@ class MainViewModel(
                 if (reading == null) {
                     appendLine("No reading yet")
                 } else {
+                    val eci = reading.cell?.eci
+                    val nci = reading.cell?.nci
                     val identity =
                         when {
-                            reading.cell?.eci != null -> SxFormat.formatEnbSector(reading.cell.eci)
-                            reading.cell?.nci != null -> SxFormat.formatNci(reading.cell.nci)
+                            eci != null -> SxFormat.formatEnbSector(eci)
+                            nci != null -> SxFormat.formatNci(nci)
                             else -> reading.carrier.bandLabel
                         }
                     appendLine("$identity · ${SxFormat.formatDbm(reading.signal?.rsrp)}")

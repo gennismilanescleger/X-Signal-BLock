@@ -78,13 +78,14 @@ fun ExplorarScreen(
     val hasCellPermission =
         ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
             ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
+    val readingNoticeResult = readingNotice(modem, readingAgeSec, hasCellPermission) { openAppSettings(context) }
 
     LazyColumn(contentPadding = contentPadding.withScreenMargins(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         item { SxScreenHeader(stringResource(R.string.shell_tab_explorar)) }
 
         // F. Estado de lectura — only when something is actually missing.
         // Never called "Diagnóstico": the full report lives in Herramientas.
-        readingNotice(modem, readingAgeSec, hasCellPermission) { openAppSettings(context) }?.let { notice ->
+        readingNoticeResult?.let { notice ->
             item {
                 SxSectionHeader(stringResource(R.string.explorar_reading))
                 SxNotice(notice.text, notice.tone, actionLabel = notice.actionLabel, onAction = notice.onAction)
@@ -205,8 +206,10 @@ private fun readingNotice(
     readingAgeSec: Long?,
     hasCellPermission: Boolean,
     onOpenSettings: () -> Unit,
-): ReadingNotice? =
-    when {
+): ReadingNotice? {
+    val strayChannel = modem.strayChannel
+    val strayBand = modem.strayBand
+    return when {
         !hasCellPermission ->
             ReadingNotice(
                 stringResource(R.string.explorar_notice_no_permission),
@@ -217,10 +220,11 @@ private fun readingNotice(
 
         modem.carriers.isEmpty() -> ReadingNotice(stringResource(R.string.explorar_notice_no_serving), SxTone.Warning)
         readingAgeSec != null && readingAgeSec > STALE_READING_AGE_SEC -> ReadingNotice(stringResource(R.string.explorar_notice_stale), SxTone.Warning)
-        modem.strayChannel !== null -> ReadingNotice(stringResource(R.string.home_stray_channel, modem.strayChannel), SxTone.Warning)
-        modem.strayBand !== null -> ReadingNotice(stringResource(R.string.home_stray_band, modem.strayBand), SxTone.Warning)
+        strayChannel !== null -> ReadingNotice(stringResource(R.string.home_stray_channel, strayChannel), SxTone.Warning)
+        strayBand !== null -> ReadingNotice(stringResource(R.string.home_stray_band, strayBand), SxTone.Warning)
         else -> null
     }
+}
 
 private fun openAppSettings(context: Context) {
     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", context.packageName, null))
